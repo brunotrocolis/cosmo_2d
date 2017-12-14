@@ -1,0 +1,16 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+}
+canvas{
+    display: block;
+    margin: auto;
+    width: 100%;
+    image-rendering: optimizeSpeed; /*Firefox*/
+    image-rendering: pixelated; /*Chrome*/
+}
+img {
+    display: none;
+}
