@@ -1,14 +1,29 @@
 window.onload = function () {
     //Configurar tela do jogo:
-    GameScreen.start();
+    // GameScreen.start(resolution, orientation, autoHeight, camera);
+    // resolution -> Resoliução do jogo, padrão = QVGA (320 x 240).
+    // orientation -> Orientação da tela do jogo, padrão = LANDSCAPE (paisagem).
+    // autoHeight - > Ajustar altura da tela de acordo com o dispositivo, padrão = false.
+    // camera - > Area da tela onde o protagonista se movimenta sem mover a camera, padrão = 70 (70% do tamanho da tela).
+    GameScreen.start(QVGA, LANDSCAPE, false, 70);
     //Objetos do jogo:
 
+    //Criando sprites:
+    // new Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scale, rotation);
+    // src -> Id da imagem do esprite.
+    // animationFrames -> Numero de frames em que a imagem se divide verticalmente.
+    // animationSpeed -> Velocidade da animação do sprite, quantas vezes os frames se repetem pos segundo.
+    // colisionRect -> Retangulo de colisão, resebe: {x, y, width, height}.
+    // origin -> Origem do sprite, recebe: {x, y}.
+    // scale -> Escala do sprite, recebe: {x, y}.
+    // rotation -> Rotação do sprite em rad, 
+    // obs: Escala e Rotação só afetam imagem e não o retangulo de colisão.
     var cosmo_sprite_down = new Sprite('cosmo_down', 4, 2);
     var cosmo_sprite_up = new Sprite('cosmo_up', 4, 2);
     var cosmo_sprite_left = new Sprite('cosmo_left', 4, 2);
     var cosmo_sprite_right = new Sprite('cosmo_right', 4, 2);
 
-
+    //Criando um ator:
     var cosmo = new Actor(
         'Cosmo', //Nome do ator
         cosmo_sprite_down, //Sprite do ator
