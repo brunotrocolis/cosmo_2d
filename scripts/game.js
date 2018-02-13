@@ -23,6 +23,9 @@ window.onload = function () {
     var cosmo_sprite_left = new Sprite('cosmo_left', 4, 2);
     var cosmo_sprite_right = new Sprite('cosmo_right', 4, 2);
 
+    //BUG: Quando o sprite é criado de forma global, da erro na velocidade de animação quando o sprite é usado por mais de um ator.
+    //pode ser contornado clonando o Sprite para ca ator, ou criando o Sprite dentro do Ator(Actor.onCreate(){}).
+
     //Criando um ator:
     var cosmo = new Actor(
         'Cosmo', //Nome do ator
@@ -59,9 +62,10 @@ window.onload = function () {
         }
     );
 
+    //Criando senário:
     var cena = new Scene();
-    cena.addActor(cosmo, 50, 50);
-    //cena.backgroundColor = "rgb(220,070,120)";
+    cena.addActor(cosmo, 50, 50); //Adicionando Ator ao senário
+    cena.backgroundColor = "rgb(220,070,120)";
     
     //Configurar game:
     mainStart = function () {
