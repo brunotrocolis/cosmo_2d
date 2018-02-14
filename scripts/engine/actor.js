@@ -151,10 +151,10 @@ function Actor(name, sprite, unique, persistent, solid, onCreate, loop, onDestro
             var x2 = this.x + this.sprite.size.width - this.sprite.origin.x + mainScene.x;
             var y1 = this.y - this.sprite.origin.y + mainScene.y;
             var y2 = this.y + this.sprite.size.height - this.sprite.origin.y + mainScene.y;
-            if (x2 < 0 || x1 > GameScreen.size.width || y2 < 0 || y1 > GameScreen.size.height)
+            if (x2 < 0 || x1 > gameScreen.size.width || y2 < 0 || y1 > gameScreen.size.height)
                 return false;
         } else {
-            if (this.x < 0 || this.x > GameScreen.size.width || this.y < 0 || this.y > GameScreen.size.height)
+            if (this.x < 0 || this.x > gameScreen.size.width || this.y < 0 || this.y > gameScreen.size.height)
                 return false;
         }
         return true;

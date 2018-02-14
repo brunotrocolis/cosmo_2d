@@ -4,7 +4,7 @@
 function Scene(width, height) {
     this.x = 0;
     this.y = 0;
-    this.size = { width: width || GameScreen.size.width, height: height || GameScreen.size.height };
+    this.size = { width: width || gameScreen.size.width, height: height || gameScreen.size.height };
     this.actor = new Array();
     this.tileset = [new Array(), new Array()];
     this.virtualGamepad = null;
@@ -68,11 +68,11 @@ function Scene(width, height) {
         this.blockRect.push(new BlockRect(x, y, width, height, actor || null));
     },
     render: function () {
-        GameScreen.bufferContext.fillStyle = this.backgroundColor;
-        GameScreen.bufferContext.fillRect(0, 0, GameScreen.size.width, GameScreen.size.height);
+        gameScreen.bufferContext.fillStyle = this.backgroundColor;
+        gameScreen.bufferContext.fillRect(0, 0, gameScreen.size.width, gameScreen.size.height);
 
         for (var i in this.backgroundImage)
-            GameScreen.bufferContext.drawImage(this.backgroundImage[i], this.x, this.y);
+            gameScreen.bufferContext.drawImage(this.backgroundImage[i], this.x, this.y);
         for (var i in this.tileset[0])
             this.tileset[0][i].render(this);
         for (var i in this.actor)

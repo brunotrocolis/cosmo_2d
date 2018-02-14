@@ -41,10 +41,10 @@ function Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scal
         }
 
         //Desenhar Frame na tela:
-        GameScreen.bufferContext.save();
-        GameScreen.bufferContext.translate(x + mainScene.x, y + mainScene.y);
-        GameScreen.bufferContext.rotate(Math.PI / 180 * this.rotation);
-        GameScreen.bufferContext.drawImage(
+        gameScreen.bufferContext.save();
+        gameScreen.bufferContext.translate(x + mainScene.x, y + mainScene.y);
+        gameScreen.bufferContext.rotate(Math.PI / 180 * this.rotation);
+        gameScreen.bufferContext.drawImage(
             this.image,
             index * this.size.width,
             0,
@@ -54,7 +54,7 @@ function Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scal
             -this.origin.y,
             this.size.width * this.scale.x,
             this.size.height * this.scale.y);
-        GameScreen.bufferContext.restore();
+        gameScreen.bufferContext.restore();
     },
     update: function (x, y) {
         //Calcular centro de colisão:

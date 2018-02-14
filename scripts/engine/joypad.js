@@ -11,23 +11,23 @@ function Analog(x, y, r, strokeColor, fillColor) {
     this.hypotenuse = 0;
 } Analog.prototype = {
     render: function () {
-        GameScreen.bufferContext.strokeStyle = this.strokeColor;
-        GameScreen.bufferContext.beginPath();
-        GameScreen.bufferContext.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
-        GameScreen.bufferContext.closePath();
-        GameScreen.bufferContext.stroke();
-        GameScreen.bufferContext.strokeStyle = this.strokeColor;
-        GameScreen.bufferContext.fillStyle = this.fillColor;
-        GameScreen.bufferContext.beginPath();
+        gameScreen.bufferContext.strokeStyle = this.strokeColor;
+        gameScreen.bufferContext.beginPath();
+        gameScreen.bufferContext.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+        gameScreen.bufferContext.closePath();
+        gameScreen.bufferContext.stroke();
+        gameScreen.bufferContext.strokeStyle = this.strokeColor;
+        gameScreen.bufferContext.fillStyle = this.fillColor;
+        gameScreen.bufferContext.beginPath();
         if (this.hypotenuse <= this.r || (this.output.x == 0 && this.output.y == 0))
-            GameScreen.bufferContext.arc(this.output.x + this.x, this.output.y + this.y, Math.round(this.r / 2), 0, Math.PI * 2, true);
+            gameScreen.bufferContext.arc(this.output.x + this.x, this.output.y + this.y, Math.round(this.r / 2), 0, Math.PI * 2, true);
         else {
             var a = Math.atan2(this.output.y, this.output.x);
-            GameScreen.bufferContext.arc(this.r * Math.cos(a) + this.x, this.r * Math.sin(a) + this.y, Math.round(this.r / 2), 0, Math.PI * 2, true);
+            gameScreen.bufferContext.arc(this.r * Math.cos(a) + this.x, this.r * Math.sin(a) + this.y, Math.round(this.r / 2), 0, Math.PI * 2, true);
         }
-        GameScreen.bufferContext.closePath();
-        GameScreen.bufferContext.stroke();
-        GameScreen.bufferContext.fill();
+        gameScreen.bufferContext.closePath();
+        gameScreen.bufferContext.stroke();
+        gameScreen.bufferContext.fill();
     },
     update: function () {
         //Verifica se existe algun toque na tela.
@@ -70,17 +70,17 @@ function Button(x, y, r, label, strokeColor, fillColor) {
     this.pressed = false;
 } Button.prototype = {
     render: function () {
-        GameScreen.bufferContext.strokeStyle = this.strokeColor;
-        GameScreen.bufferContext.fillStyle = this.fillColor;
-        GameScreen.bufferContext.beginPath();
-        GameScreen.bufferContext.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
-        GameScreen.bufferContext.closePath();
-        GameScreen.bufferContext.stroke();
-        if (this.pressed) GameScreen.bufferContext.fill();
-        GameScreen.bufferContext.font = 'bold ' + 2 * this.r + 'px courier';
-        GameScreen.bufferContext.strokeText(this.label, this.x - this.r / 1.7, this.y + this.r / 1.7);
-        GameScreen.bufferContext.fillText(this.label, this.x - this.r / 1.7, this.y + this.r / 1.7);
-        GameScreen.bufferContext.font = '12px courier';
+        gameScreen.bufferContext.strokeStyle = this.strokeColor;
+        gameScreen.bufferContext.fillStyle = this.fillColor;
+        gameScreen.bufferContext.beginPath();
+        gameScreen.bufferContext.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+        gameScreen.bufferContext.closePath();
+        gameScreen.bufferContext.stroke();
+        if (this.pressed) gameScreen.bufferContext.fill();
+        gameScreen.bufferContext.font = 'bold ' + 2 * this.r + 'px courier';
+        gameScreen.bufferContext.strokeText(this.label, this.x - this.r / 1.7, this.y + this.r / 1.7);
+        gameScreen.bufferContext.fillText(this.label, this.x - this.r / 1.7, this.y + this.r / 1.7);
+        gameScreen.bufferContext.font = '12px courier';
     },
     update: function () {
         if (touch.length > 0) {

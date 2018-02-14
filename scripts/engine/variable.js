@@ -3,6 +3,8 @@
 //--------------------------------------------------------------------------------------------------------------
 var time = { fps: 60, delta: 0, last: 0 }; //Vareáveis de controle de tempo e FPS
 
+var gameScreen = null;
+
 var mainScene; //Senário
 var mainActor; //Protagonista
 

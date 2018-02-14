@@ -35,6 +35,6 @@ function Tileset(src, rows, columns, matrix) {
     }
 } Tileset.prototype = {
     render: function (map) {
-        GameScreen.bufferContext.drawImage(this.buffer, mainScene.x, mainScene.y);
+        gameScreen.bufferContext.drawImage(this.buffer, mainScene.x, mainScene.y);
     }
 }
