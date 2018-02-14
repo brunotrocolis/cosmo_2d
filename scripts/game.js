@@ -1,11 +1,6 @@
 window.onload = function () {
     //Configurar tela do jogo:
-    // GameScreen.start(resolution, orientation, autoHeight, camera);
-    // resolution -> Resoliução do jogo, padrão = QVGA (320 x 240).
-    // orientation -> Orientação da tela do jogo, padrão = LANDSCAPE (paisagem).
-    // autoHeight - > Ajustar altura da tela de acordo com o dispositivo, padrão = false.
-    // camera - > Area da tela onde o protagonista se movimenta sem mover a camera, padrão = 70 (70% do tamanho da tela).
-    GameScreen.start(QVGA, LANDSCAPE, false, 70);
+    gameScreen = new GameScreen(QVGA, LANDSCAPE, true, null, false);
     //Objetos do jogo:
 
     //Criando sprites:
