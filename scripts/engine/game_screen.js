@@ -1,7 +1,7 @@
-function GameScreen(resolution, orientation, autoHeight, conteiner, interpolation) {
+function GameScreen(resolution, orientation, autoHeight, content, interpolation) {
     this.mainCanvas = document.createElement('canvas');
     this.bufferCanvas = document.createElement('canvas');
-    //dimencionar canvas
+    //dimensionar canvas
     this.size = {};
     if (orientation) {
         this.size = {
@@ -26,8 +26,8 @@ function GameScreen(resolution, orientation, autoHeight, conteiner, interpolatio
     this.mainContext = this.mainCanvas.getContext('2d');
     this.bufferContext = this.bufferCanvas.getContext('2d');
 
-    if (conteiner) {
-        document.getElementById(conteiner).appendChild(this.mainCanvas);
+    if (content) {
+        document.getElementById(content).appendChild(this.mainCanvas);
     } else {
         document.body.appendChild(this.mainCanvas);
     }

@@ -11,25 +11,25 @@ function BlockRect(x, y, width, height, actor) {
 } BlockRect.prototype = {
     block: function (actor) {
         if (actor.solid) {
-            var legX = Math.abs(this.center.x - actor.sprite.colision.center.x);
-            var legY = Math.abs(this.center.y - actor.sprite.colision.center.y);
-            var reachX = this.half.width + actor.sprite.colision.half.width;
-            var reachY = this.half.height + actor.sprite.colision.half.height;
+            var legX = Math.abs(this.center.x - actor.sprite.collision.center.x);
+            var legY = Math.abs(this.center.y - actor.sprite.collision.center.y);
+            var reachX = this.half.width + actor.sprite.collision.half.width;
+            var reachY = this.half.height + actor.sprite.collision.half.height;
             if (legX < reachX && legY < reachY) {
                 var overlap = { x: reachX - legX, y: reachY - legY }
                 if (overlap.x > overlap.y) {
-                    if (actor.sprite.colision.center.y <= this.center.y && !actor.block.up) {
+                    if (actor.sprite.collision.center.y <= this.center.y && !actor.block.up) {
                         actor.block.up = true;
                         actor.y -= overlap.y;
-                    } else if (actor.sprite.colision.center.y > this.center.y && !actor.block.down) {
+                    } else if (actor.sprite.collision.center.y > this.center.y && !actor.block.down) {
                         actor.block.down = true;
                         actor.y += overlap.y;
                     }
                 } else {
-                    if (actor.sprite.colision.center.x <= this.center.x && !actor.block.left) {
+                    if (actor.sprite.collision.center.x <= this.center.x && !actor.block.left) {
                         actor.block.left = true;
                         actor.x -= overlap.x;
-                    } else if (actor.sprite.colision.center.x > this.center.x && !actor.block.right) {
+                    } else if (actor.sprite.collision.center.x > this.center.x && !actor.block.right) {
                         actor.block.right = true;
                         actor.x += overlap.x;
                     }

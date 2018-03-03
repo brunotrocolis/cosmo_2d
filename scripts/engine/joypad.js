@@ -30,18 +30,18 @@ function Analog(x, y, r, strokeColor, fillColor) {
         gameScreen.bufferContext.fill();
     },
     update: function () {
-        //Verifica se existe algun toque na tela.
+        //Verifica se existe algum toque na tela.
         if (touch.length > 0) {
-            //Fazendo varredurar nos toques na tela.
+            //Fazendo varredura nos toques na tela.
             for (var i in touch) {
-                //Calculando catetos entre o toque natela e o centro do analógico.
+                //Calculando catetos entre o toque na tela e o centro do analógico.
                 var legX = Math.abs(touch[i].x - this.x);
                 var legY = Math.abs(touch[i].y - this.y);
                 //Calculando distancia entre o toque e o centro do analógico.
                 this.hypotenuse = Math.sqrt(Math.pow(legX, 2) + Math.pow(legY, 2));
                 //Se a hipotenusa for menor que o raio de ação.
                 if (this.hypotenuse < (3 * this.r)) {
-                    //Definindo variável de saida.
+                    //Definindo variável de saída.
                     this.output = { x: touch[i].x - this.x, y: touch[i].y - this.y };
                     break;
                 } else
@@ -66,7 +66,7 @@ function Button(x, y, r, label, strokeColor, fillColor) {
     this.strokeColor = strokeColor || '#FFFFFF';
     //cor dos preenchimentos.
     this.fillColor = fillColor || "rgba(255,255,255,0.5)";
-    //Estado de saida do botão.
+    //Estado de saída do botão.
     this.pressed = false;
 } Button.prototype = {
     render: function () {

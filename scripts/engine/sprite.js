@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------------------------------
 //Sprite--------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-function Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scale, rotation) {
+function Sprite(src, animationFrames, animationSpeed, collisionRect, origin, scale, rotation) {
     this.image = file(src);
     this.animation = {
         frames: animationFrames || 1,
@@ -15,12 +15,12 @@ function Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scal
     this.visible = true;
     this.size = { width: this.image.width / this.animation.frames, height: this.image.height };
     this.origin = origin || { x: Math.round(this.size.width / 2), y: Math.round(this.size.height / 2) };
-    this.colision = {
-        rect: colisionRect || { x: 0, y: 0, width: this.size.width, height: this.size.height },
+    this.collision = {
+        rect: collisionRect || { x: 0, y: 0, width: this.size.width, height: this.size.height },
         half: null,
         center: { x: 0, y: 0 }
     };
-    this.colision.half = { width: this.colision.rect.width / 2, height: this.colision.rect.height / 2 };
+    this.collision.half = { width: this.collision.rect.width / 2, height: this.collision.rect.height / 2 };
 } Sprite.prototype = {
     render: function (x, y) {
         //Calcular frame da animação:
@@ -58,7 +58,7 @@ function Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scal
     },
     update: function (x, y) {
         //Calcular centro de colisão:
-        this.colision.center.x = x + mainScene.x + this.colision.rect.x + this.colision.half.width - this.origin.x;
-        this.colision.center.y = y + mainScene.y + this.colision.rect.y + this.colision.half.height - this.origin.y;
+        this.collision.center.x = x + mainScene.x + this.collision.rect.x + this.collision.half.width - this.origin.x;
+        this.collision.center.y = y + mainScene.y + this.collision.rect.y + this.collision.half.height - this.origin.y;
     }
 }

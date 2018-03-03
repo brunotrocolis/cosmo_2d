@@ -17,19 +17,19 @@ function Actor(name, sprite, unique, persistent, solid, onCreate, loop, onDestro
     this.moving = { x: null, y: null, speed: null, type: null, enable: false, overAction: null, DIAGONAL: 1, YX: 2, XY: 3 };
     this.block = { left: false, up: false, right: false, down: false };
 } Actor.prototype = {
-    onColision: function (actor, x, y) {
+    onCollision: function (actor, x, y) {
         if (actor) {
             if (typeof actor == 'object') {
-                var legX = Math.abs(this.sprite.colision.center.x - actor.sprite.colision.center.x);
-                var legY = Math.abs(this.sprite.colision.center.y - actor.sprite.colision.center.y);
-                var reachX = this.sprite.colision.half.width + actor.sprite.colision.half.width;
-                var reachY = this.sprite.colision.half.height + actor.sprite.colision.half.height;
+                var legX = Math.abs(this.sprite.collision.center.x - actor.sprite.collision.center.x);
+                var legY = Math.abs(this.sprite.collision.center.y - actor.sprite.collision.center.y);
+                var reachX = this.sprite.collision.half.width + actor.sprite.collision.half.width;
+                var reachY = this.sprite.collision.half.height + actor.sprite.collision.half.height;
                 if (legX < reachX && legY < reachY)
                     return true;
                 else
                     return false;
             } else if (typeof actor == 'string') {
-                var temp = this.onColision();
+                var temp = this.onCollision();
                 if (temp) {
                     if (temp.name == actor)
                         return true;
@@ -39,7 +39,7 @@ function Actor(name, sprite, unique, persistent, solid, onCreate, loop, onDestro
             }
         } else {
             for (var i in mainScene.actor) {
-                if (this !== mainScene.actor[i] && this.onColision(mainScene.actor[i], x, y))
+                if (this !== mainScene.actor[i] && this.onCollision(mainScene.actor[i], x, y))
                     return mainScene.actor[i];
             }
             return false;
@@ -47,29 +47,29 @@ function Actor(name, sprite, unique, persistent, solid, onCreate, loop, onDestro
     },
     onTouch: function () {
         for (var i in touch) {
-            if (this.sprite.colision.center.x - this.sprite.colision.half.width < touch[i].x &&
-                this.sprite.colision.center.x + this.sprite.colision.half.width > touch[i].x &&
-                this.sprite.colision.center.y - this.sprite.colision.half.height < touch[i].y &&
-                this.sprite.colision.center.y + this.sprite.colision.half.height > touch[i].y)
+            if (this.sprite.collision.center.x - this.sprite.collision.half.width < touch[i].x &&
+                this.sprite.collision.center.x + this.sprite.collision.half.width > touch[i].x &&
+                this.sprite.collision.center.y - this.sprite.collision.half.height < touch[i].y &&
+                this.sprite.collision.center.y + this.sprite.collision.half.height > touch[i].y)
                 return true;
         }
         return false;
     },
     push: function (actor) {
         if (actor) {
-            var legX = Math.abs(this.sprite.colision.center.x - actor.sprite.colision.center.x);
-            var legY = Math.abs(this.sprite.colision.center.y - actor.sprite.colision.center.y);
-            var reachX = this.sprite.colision.half.width + actor.sprite.colision.half.width;
-            var reachY = this.sprite.colision.half.height + actor.sprite.colision.half.height;
+            var legX = Math.abs(this.sprite.collision.center.x - actor.sprite.collision.center.x);
+            var legY = Math.abs(this.sprite.collision.center.y - actor.sprite.collision.center.y);
+            var reachX = this.sprite.collision.half.width + actor.sprite.collision.half.width;
+            var reachY = this.sprite.collision.half.height + actor.sprite.collision.half.height;
             if (legX < reachX && legY < reachY) {
                 var overlap = { x: reachX - legX, y: reachY - legY }
                 if (overlap.x > overlap.y) {
-                    if (actor.sprite.colision.center.y <= this.sprite.colision.center.y)
+                    if (actor.sprite.collision.center.y <= this.sprite.collision.center.y)
                         actor.y -= overlap.y;
                     else
                         actor.y += overlap.y;
                 } else {
-                    if (actor.sprite.colision.center.x <= this.sprite.colision.center.x)
+                    if (actor.sprite.collision.center.x <= this.sprite.collision.center.x)
                         actor.x -= overlap.x;
                     else
                         actor.x += overlap.x;

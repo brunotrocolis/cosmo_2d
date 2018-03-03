@@ -4,15 +4,15 @@ window.onload = function () {
     //Objetos do jogo:
 
     //Criando sprites:
-    // new Sprite(src, animationFrames, animationSpeed, colisionRect, origin, scale, rotation);
+    // new Sprite(src, animationFrames, animationSpeed, collisionRect, origin, scale, rotation);
     // src -> Id da imagem do esprite.
     // animationFrames -> Numero de frames em que a imagem se divide verticalmente.
     // animationSpeed -> Velocidade da animação do sprite, quantas vezes os frames se repetem pos segundo.
-    // colisionRect -> Retangulo de colisão, resebe: {x, y, width, height}.
+    // collisionRect -> Retângulo de colisão, recebe: {x, y, width, height}.
     // origin -> Origem do sprite, recebe: {x, y}.
     // scale -> Escala do sprite, recebe: {x, y}.
     // rotation -> Rotação do sprite em rad, 
-    // obs: Escala e Rotação só afetam imagem e não o retangulo de colisão.
+    // obs: Escala e Rotação só afetam imagem e não o retângulo de colisão.
     var cosmo_sprite_down = new Sprite('cosmo_down', 4, 2);
     var cosmo_sprite_up = new Sprite('cosmo_up', 4, 2);
     var cosmo_sprite_left = new Sprite('cosmo_left', 4, 2);
@@ -28,7 +28,7 @@ window.onload = function () {
         true, //Se o ator é único
         true, //Se o ator continua funcionando quando esta fora da tela
         true, //Se o ator é sólido
-        function () { //Função executatdo ao ator ser criado
+        function () { //Função executado ao ator ser criado
             this.speed = 1;
         },
         function () { //Função executada a cada frame enquanto o ator estiver ativo
