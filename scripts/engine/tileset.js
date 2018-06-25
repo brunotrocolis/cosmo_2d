@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------------------------------
 //Tileset ------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-function Tileset(src, rows, columns, matrix) {
-    this.image = file(src);
+cosmo.Tileset = function (src, rows, columns, matrix) {
+    this.image = cosmo.res(src);
     this.size = {
         rows: rows,
         columns: columns,
@@ -33,8 +33,9 @@ function Tileset(src, rows, columns, matrix) {
             this.size.height
         );
     }
-} Tileset.prototype = {
+} 
+cosmo.Tileset.prototype = {
     render: function (map) {
-        gameScreen.bufferContext.drawImage(this.buffer, mainScene.x, mainScene.y);
+        cosmo.gameScreen.bufferContext.drawImage(this.buffer, mainScene.x, mainScene.y);
     }
 }

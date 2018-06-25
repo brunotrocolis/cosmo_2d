@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------------------------------
 //Cenário ---------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-function Scene(width, height) {
+cosmo.Scene = function (width, height) {
     this.x = 0;
     this.y = 0;
-    this.size = { width: width || gameScreen.size.width, height: height || gameScreen.size.height };
+    this.size = { width: width || cosmo.gameScreen.size.width, height: height || cosmo.gameScreen.size.height };
     this.actor = new Array();
     this.tileset = [new Array(), new Array()];
     this.virtualGamepad = null;
@@ -13,10 +13,11 @@ function Scene(width, height) {
     this.backgroundColor = 'rgb(0,162,232)';
     this.backgroundImage = new Array();
     this.backgroundMusic = null;
-} Scene.prototype = {
+} 
+cosmo.Scene.prototype = {
     loop: null,
     addBackgroundImage: function (src, repeat) {
-        var image = file(src);
+        var image = res(src);
         if (repeat) {
             if (this.size.width <= image.width && this.size.height <= image.height)
                 this.backgroundImage.push(image);
@@ -68,11 +69,11 @@ function Scene(width, height) {
         this.blockRect.push(new BlockRect(x, y, width, height, actor || null));
     },
     render: function () {
-        gameScreen.bufferContext.fillStyle = this.backgroundColor;
-        gameScreen.bufferContext.fillRect(0, 0, gameScreen.size.width, gameScreen.size.height);
+        cosmo.gameScreen.bufferContext.fillStyle = this.backgroundColor;
+        cosmo.gameScreen.bufferContext.fillRect(0, 0, cosmo.gameScreen.size.width, cosmo.gameScreen.size.height);
 
         for (var i in this.backgroundImage)
-            gameScreen.bufferContext.drawImage(this.backgroundImage[i], this.x, this.y);
+        cosmo.gameScreen.bufferContext.drawImage(this.backgroundImage[i], this.x, this.y);
         for (var i in this.tileset[0])
             this.tileset[0][i].render(this);
         for (var i in this.actor)

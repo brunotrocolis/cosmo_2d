@@ -2,7 +2,7 @@
 //System -------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
 //Função para clonar objetos
-function clone(from) {
+cosmo.clone = function(from) {
     var prop;
     var copy;
     if (from == null || typeof from != "object") {
@@ -16,42 +16,42 @@ function clone(from) {
     }
     copy = new from.constructor();
     for (prop in from) {
-        copy[prop] = clone(from[prop]);
+        copy[prop] = cosmo.clone(from[prop]);
     }
     return copy;
 }
 
 //Buscar recursos, imagens e sons
-function file(id) {
+cosmo.resources = cosmo.res = function (id) {
     return document.getElementById(id);
 }
 
 //Leitura do teclado
-var key = new Array();
+cosmo.key = new Array();
 
-function keysPressed(event) {
+cosmo.keysPressed = function (event) {
     //console.log(event.keyCode);
-    key[event.keyCode] = true;
+    cosmo.key[event.keyCode] = true;
 }
-function keysReleased(event) {
-    key[event.keyCode] = false;
+cosmo.keysReleased = function (event) {
+    cosmo.key[event.keyCode] = false;
 }
-window.addEventListener("keydown", keysPressed, false);
-window.addEventListener("keyup", keysReleased, false);
+window.addEventListener("keydown", cosmo.keysPressed, false);
+window.addEventListener("keyup", cosmo.keysReleased, false);
 
 //Leitura dos toques na tela
-var touch = new Array();
-document.addEventListener("touchstart", touchAction);
-document.addEventListener("touchmove", touchAction);
+cosmo.touch = new Array();
+document.addEventListener("touchstart", cosmo.touchAction);
+document.addEventListener("touchmove", cosmo.touchAction);
 document.addEventListener("touchend", function (e) {
-    touch = new Array();
+    cosmo.touch = new Array();
     touchAction(e)
 });
-function touchAction(e) {
+cosmo.touchAction = function (e) {
     for (var i = 0; i < e.touches.length; i++) {
-        touch[i] = {
-            x: Math.round(e.touches[i].clientX * (GameScreen.size.width / GameScreen.size.deviceWidth)),
-            y: Math.round(e.touches[i].clientY * (GameScreen.size.height / GameScreen.size.deviceHeight))
+        cosmo.touch[i] = {
+            x: Math.round(e.touches[i].clientX * (cosmo.gameScreen.size.width / cosmo.gameScreen.size.deviceWidth)),
+            y: Math.round(e.touches[i].clientY * (cosmo.gameScreen.size.height / cosmo.gameScreen.size.deviceHeight))
         };
     }
 }

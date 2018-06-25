@@ -11,6 +11,6 @@ canvas{
     image-rendering: optimizeSpeed; /*Firefox*/
     image-rendering: pixelated; /*Chrome*/
 }
-img {
+.cosmo-resources {
     display: none;
 }

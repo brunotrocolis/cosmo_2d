@@ -1,14 +1,15 @@
 //--------------------------------------------------------------------------------------------------------------
 //BlockRect ---------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-function BlockRect(x, y, width, height, actor) {
+cosmo.BlockRect = function (x, y, width, height, actor) {
     this.x = x;
     this.y = y;
     this.size = { width: width, height: height };
     this.half = { width: width / 2, height: height / 2 };
     this.center = { x: x + this.half.width, y: y + this.half.height };
     this.actor = actor || null;
-} BlockRect.prototype = {
+} 
+cosmo.BlockRect.prototype = {
     block: function (actor) {
         if (actor.solid) {
             var legX = Math.abs(this.center.x - actor.sprite.collision.center.x);

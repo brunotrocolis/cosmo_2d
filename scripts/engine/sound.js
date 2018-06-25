@@ -2,7 +2,7 @@
 //Sound---------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
 //Sons do jogo.
-function Sound(src, volume, loop) {
+cosmo.Sound = function (src, volume, loop) {
     //Arquivo de som.
     this.audio = new Audio(src);
     //Volume de reprodução.
@@ -11,7 +11,8 @@ function Sound(src, volume, loop) {
     this.audio.loop = loop || false;
     //Ler arquivo de som.
     this.audio.load();
-} Sound.prototype = {
+} 
+cosmo.Sound.prototype = {
     //Função para tocar.
     play: function () {
         this.audio.play();

@@ -2,9 +2,6 @@
 <html lang="pt-br">
 
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="style/index.css">
@@ -13,23 +10,13 @@
 
 <body>
     <!-- Arquivos gráficos -->
-    <img src="resources/sprites/down.png" width="60" height="27" id="cosmo_down"/>
-    <img src="resources/sprites/left.png" width="60" height="27" id="cosmo_left"/>
-    <img src="resources/sprites/right.png" width="60" height="27" id="cosmo_right"/>
-    <img src="resources/sprites/up.png" width="60" height="27" id="cosmo_up"/>
+    <img class="cosmo-resources" src="resources/sprites/down.png" width="60" height="27" id="cosmo_down"/>
+    <img class="cosmo-resources" src="resources/sprites/left.png" width="60" height="27" id="cosmo_left"/>
+    <img class="cosmo-resources" src="resources/sprites/right.png" width="60" height="27" id="cosmo_right"/>
+    <img class="cosmo-resources" src="resources/sprites/up.png" width="60" height="27" id="cosmo_up"/>
 
-    <script type="text/javascript" src="scripts/engine/variable.js"></script>
-    <script type="text/javascript" src="scripts/engine/system.js"></script>
-    <script type="text/javascript" src="scripts/engine/game_screen.js"></script>
-    <script type="text/javascript" src="scripts/engine/sound.js"></script>
-    <script type="text/javascript" src="scripts/engine/joypad.js"></script>
-    <script type="text/javascript" src="scripts/engine/tileset.js"></script>
-    <script type="text/javascript" src="scripts/engine/sprite.js"></script>
-    <script type="text/javascript" src="scripts/engine/actor.js"></script>
-    <script type="text/javascript" src="scripts/engine/block_rect.js"></script>
-    <script type="text/javascript" src="scripts/engine/scene.js"></script>
-    <script type="text/javascript" src="scripts/engine/main.js"></script>
-    <script type="text/javascript" src="scripts/game.js"></script>
+    <script type="text/javascript" src="scripts/cosmo2d-2.0.1.min.js"></script>
+    <script type="text/javascript" src="scripts/game.min.js"></script>
 </body>
 
 </html>

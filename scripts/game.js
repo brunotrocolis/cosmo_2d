@@ -1,76 +1,82 @@
-window.onload = function () {
-    //Configurar tela do jogo:
-    gameScreen = new GameScreen(QVGA, LANDSCAPE, true, null, false);
-    //Objetos do jogo:
-
-    //Criando sprites:
-    // new Sprite(src, animationFrames, animationSpeed, collisionRect, origin, scale, rotation);
-    // src -> Id da imagem do esprite.
-    // animationFrames -> Numero de frames em que a imagem se divide verticalmente.
-    // animationSpeed -> Velocidade da animação do sprite, quantas vezes os frames se repetem pos segundo.
-    // collisionRect -> Retângulo de colisão, recebe: {x, y, width, height}.
-    // origin -> Origem do sprite, recebe: {x, y}.
-    // scale -> Escala do sprite, recebe: {x, y}.
-    // rotation -> Rotação do sprite em rad, 
-    // obs: Escala e Rotação só afetam imagem e não o retângulo de colisão.
-    var cosmo_sprite_down = new Sprite('cosmo_down', 4, 2);
-    var cosmo_sprite_up = new Sprite('cosmo_up', 4, 2);
-    var cosmo_sprite_left = new Sprite('cosmo_left', 4, 2);
-    var cosmo_sprite_right = new Sprite('cosmo_right', 4, 2);
-
-    //BUG: Quando o sprite é criado de forma global, da erro na velocidade de animação quando o sprite é usado por mais de um ator.
-    //pode ser contornado clonando o Sprite para ca ator, ou criando o Sprite dentro do Ator(Actor.onCreate(){}).
-
-    //Criando um ator:
-    var cosmo = new Actor(
-        'Cosmo', //Nome do ator
-        cosmo_sprite_down, //Sprite do ator
-        true, //Se o ator é único
-        true, //Se o ator continua funcionando quando esta fora da tela
-        true, //Se o ator é sólido
-        function () { //Função executado ao ator ser criado
-            this.speed = 1;
-        },
-        function () { //Função executada a cada frame enquanto o ator estiver ativo
-            if(key[KEY.UP]){
-                this.y -= this.speed;
-                this.sprite = cosmo_sprite_up;
-                this.sprite.animation.fix = false;
-            } else if(key[KEY.DOWN]){
-                this.y += this.speed;
-                this.sprite = cosmo_sprite_down;
-                this.sprite.animation.fix = false;
-            } else if(key[KEY.LEFT]){
-                this.x -= this.speed;
-                this.sprite = cosmo_sprite_left;
-                this.sprite.animation.fix = false;
-            } else if(key[KEY.RIGHT]){
-                this.x += this.speed;
-                this.sprite = cosmo_sprite_right;
-                this.sprite.animation.fix = false;
-            } else {
-                this.sprite.animation.fix = 0;
+(function () {
+    //--- Game ----------------------------------------------------------
+    cosmo.game = function ($) {
+        $.cosmo = new $.Actor({
+            name: 'Cosmo',
+            x: 10,
+            y: 30,
+            sprite: null,
+            start: function () {
+                this.sp_up = new $.Sprite({
+                    image: 'cosmo_up',
+                    animation_frames: 4
+                });
+                this.sp_down = new $.Sprite({
+                    image: 'cosmo_down',
+                    animation_frames: 4
+                });
+                this.sp_left = new $.Sprite({
+                    image: 'cosmo_left',
+                    animation_frames: 4
+                });
+                this.sp_right = new $.Sprite({
+                    image: 'cosmo_right',
+                    animation_frames: 4
+                });
+                this.sprite = this.sp_down;
+            },
+            loop: function () {
+                if ($.key[$.KEY.UP]) {
+                    this.sprite.animation.fix = false;
+                    this.sprite = this.sp_up;
+                    this.y--;
+                } else if ($.key[$.KEY.DOWN]) {
+                    this.sprite.animation.fix = false;
+                    this.sprite = this.sp_down;
+                    this.y++;
+                } else if ($.key[$.KEY.LEFT]) {
+                    this.sprite.animation.fix = false;
+                    this.sprite = this.sp_left;
+                    this.x--;
+                } else if ($.key[$.KEY.RIGHT]) {
+                    this.sprite.animation.fix = false;
+                    this.sprite = this.sp_right;
+                    this.x++;
+                } else {
+                    this.sprite.animation.fix = 0;
+                }
+                //this.push();
+            },
+            unique: true,
+            persistent: true,
+            solid: true
+        });
+        $.teste = new $.Actor({
+            sprite: new $.Sprite({
+                image: 'cosmo_left',
+                animation_frames: 4
+            }),
+            loop: function () {
+                if (this.colliding($.cosmo)) {
+                    console.log("Colidindo");
+                }
+                this.push();
             }
-        },
-        function () { //Função executada quando o ator é removido
-
+        });
+        $.tela = new $.Scene();
+        $.tela.add($.cosmo, [100, 100]);
+        $.tela.add($.teste, [200, 20]);
+        $.tela.add(new $.BlockRect({
+            x: 0,
+            y: 0,
+            width: 20,
+            height: 20
+        }));
+        cosmo.start = function () {
+            $.scene = $.tela;
         }
-    );
-
-    //Criando senário:
-    var cena = new Scene();
-    cena.addActor(cosmo, 50, 50); //Adicionando Ator ao senário
-    cena.backgroundColor = "rgb(220,070,120)";
-    
-    //Configurar game:
-    mainStart = function () {
-        mainActor = cosmo;
-        mainScene = cena;
+        cosmo.loop = function () {
+        }
     }
-    //Loop principal:
-    mainLoop = function () {
-
-    }
-    //Inicia game:
-    playGame();
-}
+    cosmo.play();
+})();

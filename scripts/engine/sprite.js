@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------------------------------
 //Sprite--------------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------
-function Sprite(src, animationFrames, animationSpeed, collisionRect, origin, scale, rotation) {
-    this.image = file(src);
+cosmo.Sprite = function (src, animationFrames, animationSpeed, collisionRect, origin, scale, rotation) {
+    this.image = cosmo.res(src);
     this.animation = {
         frames: animationFrames || 1,
         speed: animationSpeed || 1,
@@ -21,7 +21,8 @@ function Sprite(src, animationFrames, animationSpeed, collisionRect, origin, sca
         center: { x: 0, y: 0 }
     };
     this.collision.half = { width: this.collision.rect.width / 2, height: this.collision.rect.height / 2 };
-} Sprite.prototype = {
+}
+cosmo.Sprite.prototype = {
     render: function (x, y) {
         //Calcular frame da animação:
         var index = 0, nextFrame = 0;
@@ -41,10 +42,10 @@ function Sprite(src, animationFrames, animationSpeed, collisionRect, origin, sca
         }
 
         //Desenhar Frame na tela:
-        gameScreen.bufferContext.save();
-        gameScreen.bufferContext.translate(x + mainScene.x, y + mainScene.y);
-        gameScreen.bufferContext.rotate(Math.PI / 180 * this.rotation);
-        gameScreen.bufferContext.drawImage(
+        cosmo.gameScreen.bufferContext.save();
+        cosmo.gameScreen.bufferContext.translate(x + mainScene.x, y + mainScene.y);
+        cosmo.gameScreen.bufferContext.rotate(Math.PI / 180 * this.rotation);
+        cosmo.gameScreen.bufferContext.drawImage(
             this.image,
             index * this.size.width,
             0,
@@ -53,8 +54,10 @@ function Sprite(src, animationFrames, animationSpeed, collisionRect, origin, sca
             -this.origin.x,
             -this.origin.y,
             this.size.width * this.scale.x,
-            this.size.height * this.scale.y);
-        gameScreen.bufferContext.restore();
+            this.size.height * this.scale.y
+        );
+        cosmo.gameScreen.bufferContext.restore();
+
     },
     update: function (x, y) {
         //Calcular centro de colisão:
