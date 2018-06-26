@@ -1,6 +1,9 @@
-(function () {
-    //--- Game ----------------------------------------------------------
+//--- Game ----------------------------------------------------------
+window.onload = function () {
     cosmo.game = function ($) {
+        $.screen = new cosmo.Screen({
+            auto_height: true
+        });
         $.cosmo = new $.Actor({
             name: 'Cosmo',
             x: 10,
@@ -51,6 +54,18 @@
             persistent: true,
             solid: true
         });
+        $.button_start = new $.Button({
+            image: 'button-start',
+            x: 80,
+            y: 50,
+            key: cosmo.KEY.ENTER,
+            press: function () {
+                console.log("Apertado");
+            },
+            hold: function () {
+                console.log("Pressionado");
+            }
+        });
         $.teste = new $.Actor({
             sprite: new $.Sprite({
                 image: 'cosmo_left',
@@ -66,17 +81,12 @@
         $.tela = new $.Scene();
         $.tela.add($.cosmo, [100, 100]);
         $.tela.add($.teste, [200, 20]);
-        $.tela.add(new $.BlockRect({
-            x: 0,
-            y: 0,
-            width: 20,
-            height: 20
-        }));
-        cosmo.start = function () {
+        $.tela.add($.button_start);
+        $.start = function () {
             $.scene = $.tela;
         }
-        cosmo.loop = function () {
+        $.loop = function () {
         }
     }
     cosmo.play();
-})();
+}

@@ -9,6 +9,7 @@ var cosmo = {
         last: 0
     },
     key: [],
+    touch: [],
     KEY: {
         ENTER: 13,
         ESC: 27,
@@ -56,6 +57,7 @@ cosmo.resources = function (id) {
 }
 cosmo.res = cosmo.resources;
 //Events:
+//Teclado:
 cosmo.keysPressed = function (event) {
     //console.log(event.keyCode);
     cosmo.key[event.keyCode] = true;
@@ -66,43 +68,53 @@ cosmo.keysReleased = function (event) {
 window.addEventListener("keydown", cosmo.keysPressed, false);
 window.addEventListener("keyup", cosmo.keysReleased, false);
 
+//Leitura dos toques na tela
+cosmo.touchAction = function (event) {
+    for (var i = 0; i < event.changedTouches.length; i++) {
+        cosmo.touch[i] = {
+            x: Math.round(event.changedTouches[i].clientX * (cosmo.screen.size.width / cosmo.screen.size.content_width)),
+            y: Math.round(event.changedTouches[i].clientY * (cosmo.screen.size.height / cosmo.screen.size.content_height)),
+            radius: {
+                x: event.changedTouches[i].radiusX,
+                y: event.changedTouches[i].radiusY
+            },
+            force: event.changedTouches[i].force,
+            rotation_angle: event.changedTouches[i].rotationAngle
+        };
+    }
+}
+document.addEventListener("touchstart", cosmo.touchAction);
+document.addEventListener("touchmove", cosmo.touchAction);
+document.addEventListener("touchend", function (event) {
+    cosmo.touchAction(event);
+    cosmo.touch = [];
+});
 //--- Screen --------------------------------------------------------
 cosmo.Screen = function (set) {
     set = set || {};
     this.main_canvas = document.createElement('canvas');
     this.buffer_canvas = document.createElement('canvas');
-    //resolution: cosmo.QVGA, orientation: true, auto_height: false, content: 'body', interpolation: true
     set.resolution = set.resolution || cosmo.QVGA;
-    set.orientation = set.orientation === undefined ? true : false;
-    if (set.orientation) {
-        this.size = {
-            width: set.resolution[0],
-            height: set.resolution[1],
-            device_width: document.documentElement.clientWidth,
-            device_height: document.documentElement.clientHeight
-        };
-    } else {
-        this.size = {
-            width: set.resolution[1],
-            height: set.resolution[0],
-            device_width: document.documentElement.clientHeight,
-            device_height: document.documentElement.clientWidth
-        };
-    }
-    if (set.auto_height)
-        this.size.height = this.size.width * (this.size.device_height / this.size.device_width);
+    var content = cosmo.res(set.content) || document.body;
+    this.size = {};
+    this.size.device_width = document.documentElement.clientWidth;
+    this.size.device_height = document.documentElement.clientHeight;
+    this.size.content_width = set.content === undefined ? this.size.device_width : content.offsetWidth;
+    this.size.content_height = set.content === undefined ? this.size.device_height : content.offsetHeight;
+    var temp = this.size.content_width >= this.size.content_height;
+    this.size.width = temp ? set.resolution[0] : set.resolution[1];
+    this.size.height =
+        (set.auto_height === undefined) || (set.auto_height === false) ?
+            (temp ? set.resolution[1] : set.resolution[0]) :
+            (this.size.width * (this.size.content_height / this.size.content_width));
     this.main_canvas.width = this.buffer_canvas.width = this.size.width;
     this.main_canvas.height = this.buffer_canvas.height = this.size.height;
     this.main_context = this.main_canvas.getContext('2d');
     this.buffer_context = this.buffer_canvas.getContext('2d');
-    if (set.content)
-        document.getElementById(set.content).appendChild(this.main_canvas);
-    else
-        document.body.appendChild(this.main_canvas);
+    content.appendChild(this.main_canvas);
 }
 cosmo.Screen.prototype.draw_image = function (set) {
     set = set || {};
-    //image, x, y, scale_x, scale_y, rotation, opacity, origin_x, origin_y
     if (set) {
         image = cosmo.res(set.image);
         this.buffer_context.save();
@@ -132,7 +144,6 @@ cosmo.Screen.prototype.render = function () {
 //--- Sound ---------------------------------------------------------
 cosmo.Sound = function (set) {
     set = set || {};
-    //audio: string, volume: number, loop: boolean
     this.audio = cosmo.res(set.audio);
     this.audio.volume = set.volume || 1;
     this.audio.loop = set.loop === undefined ? false : true;
@@ -149,8 +160,7 @@ cosmo.Sound.prototype.set_volume = function (volume) {
     this.audio.load();
 }
 //--- Tiles ---------------------------------------------------------
-cosmo.Tiles = function (set) { 
-    //image: string, rows: number, columns: number, matrix: [[number][number]]
+cosmo.Tiles = function (set) {
     set = set || {};
     image = cosmo.res(set.image);
     this.size = {
@@ -185,9 +195,7 @@ cosmo.Tiles = function (set) {
     this.full_tiles = buffer_canvas;
 }
 cosmo.Tiles.prototype.render = function (scene) {
-    //image: string, animationFrames, animationSpeed, collisionRect, origin, scale, rotation
     cosmo.screen.buffer_context.drawImage(this.full_tiles, scene.x, scene.y);
-
 }
 //--- Sprite --------------------------------------------------------
 cosmo.Sprite = function (set) {
@@ -362,7 +370,7 @@ cosmo.Actor.prototype.push = function (actor) {
 cosmo.Actor.prototype.update = function () {
     if (this.loop)
         this.loop(this);
-    if(this.sprite && this.sprite.visible)
+    if (this.sprite && this.sprite.visible)
         this.sprite.update(this.x, this.y);
 }
 cosmo.Actor.prototype.render = function () {
@@ -435,12 +443,53 @@ cosmo.BlockRect.prototype.update = function () {
 //--- Button --------------------------------------------------------
 cosmo.Button = function (set) {
     set = set || {};
+    this.image = cosmo.res(set.image);
+    this.x = set.x || 0;
+    this.y = set.y || 0;
+    this.press = set.press || null;
+    this.hold = set.hold || null;
+    this.scale = {};
+    this.scale.x = set.scale_x || 1;
+    this.scale.y = set.scale_y || 1;
+    this.key = set.key || null;
+    this.size = {};
+    this.size.width = Math.round(this.image.width / 2);
+    this.size.height = this.image.height;
+    this.active = false;
+}
+cosmo.Button.prototype.pressed = function () {
+    for (var i in cosmo.touch) {
+        if (this.x - (this.size.width / 2) < cosmo.touch[i].x &&
+            this.y - (this.size.height / 2) < cosmo.touch[i].y &&
+            this.x + (this.size.width / 2) > cosmo.touch[i].x &&
+            this.y + (this.size.height / 2) > cosmo.touch[i].y)
+            return true;
+    }
+    return false;
 }
 cosmo.Button.prototype.update = function () {
-
+    if (cosmo.key[this.key] || this.pressed()) {
+        this.active = true;
+        try { this.hold(); } catch(e) { }
+    } else {
+        if (this.active) {
+            this.active = false;
+            try { this.press(); } catch(e) { }
+        }
+    }
 }
 cosmo.Button.prototype.render = function () {
-
+    cosmo.screen.buffer_context.drawImage(
+        this.image,
+        this.active ? this.size.width : 0,
+        0,
+        this.size.width,
+        this.size.height,
+        Math.round(this.x - this.size.width / 2),
+        Math.round(this.y - this.size.height / 2),
+        this.size.width * this.scale.x,
+        this.size.height * this.scale.y
+    );
 }
 //--- Analog --------------------------------------------------------
 cosmo.Analog = function (set) {
@@ -460,13 +509,13 @@ cosmo.Scene = function (set) {
     this.size = {};
     this.size.width = set.width || cosmo.screen.size.width;
     this.size.height = set.height || cosmo.screen.height;
-    this.actor = set.actor || new Array();
-    this.tiles = set.tiles || [new Array(), new Array()];
-    this.button = set.button || new Array();
-    this.analog = set.analog || new Array();
-    this.block_rect = set.block_rect || new Array();
+    this.actor = set.actor || [];
+    this.tiles = set.tiles || [[], []];
+    this.button = set.button || [];
+    this.analog = set.analog || [];
+    this.block_rect = set.block_rect || [];
     this.background_color = set.background_color || 'rgb(0,162,232)';
-    this.background_image = set.background_image || new Array();
+    this.background_image = set.background_image || [];
     this.background_music = set.background_music || null;
 }
 cosmo.Scene.prototype.loop = null;
@@ -512,6 +561,8 @@ cosmo.Scene.prototype.update = function () {
         if (this.actor[i].on_screen() || this.actor[i].persistent)
             this.actor[i].update();
     }
+    for (var i in this.button)
+        this.button[i].update();
     for (var i in this.block_rect)
         this.block_rect[i].update();
     if (this.loop)
@@ -530,6 +581,8 @@ cosmo.Scene.prototype.render = function () {
             this.actor[i].render();
     for (var i in this.tiles[1])
         this.tiles[1][i].render(this);
+    for (var i in this.button)
+        this.button[i].render();
 }
 //--- Main ----------------------------------------------------------
 function game_loop() {
@@ -544,9 +597,11 @@ function game_loop() {
     cosmo.screen.render();
 }
 cosmo.play = function () {
-    this.screen = this.screen || new cosmo.Screen();
-    this.scene = null;
-    if (this.game) this.game(this);
-    if (this.start) this.start(this);
-    game_loop();
+    if (this.game) {
+        this.game(this);
+        if (this.start)
+            this.start(this);
+        if (this.screen)
+            game_loop();
+    }
 }
