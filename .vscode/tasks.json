@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar TypeScript",
+            "command": "tsc",
+            "type": "shell",
+            "args": [
+                "-w",
+                "-p",
+                "src/"
+            ],
+            "isBackground": true,
+            "problemMatcher": "$tsc-watch"
+        }
+    ]
+}

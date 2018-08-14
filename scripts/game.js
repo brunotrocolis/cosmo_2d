@@ -48,7 +48,13 @@ window.onload = function () {
                 } else {
                     this.sprite.animation.fix = 0;
                 }
-                //this.push();
+                $.screen.draw_text({
+                    text: this.name,
+                    x: this.x,
+                    y: this.y - Math.round(this.sprite.size.height / 2),
+                    align: 'center',
+                    font: "PressStart2P"
+                });
             },
             unique: true,
             persistent: true,

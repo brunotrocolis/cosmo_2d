@@ -112,6 +112,8 @@ cosmo.Screen = function (set) {
     this.main_context = this.main_canvas.getContext('2d');
     this.buffer_context = this.buffer_canvas.getContext('2d');
     content.appendChild(this.main_canvas);
+
+    this.text = [];
 }
 cosmo.Screen.prototype.draw_image = function (set) {
     set = set || {};
@@ -135,10 +137,31 @@ cosmo.Screen.prototype.draw_image = function (set) {
         this.buffer_context.restore();
     }
 }
+cosmo.Screen.prototype.draw_text = function (set) {
+    if (set) this.text.push(set);
+}
 cosmo.Screen.prototype.update = function () {
 
 }
 cosmo.Screen.prototype.render = function () {
+    for (var i in this.text) {
+        var set = this.text[i];
+        this.buffer_context.save();
+        this.buffer_context.font = (set.size || '10') + "px " + (set.font || 'sans-serif');
+        this.buffer_context.textAlign = set.align || 'start';
+        this.buffer_context.textBaseline = set.base_line || "bottom";
+        this.buffer_context.fillStyle = set.fill === undefined ? "#000" : set.fill;
+        if (set.fill !== null && set.fill !== 'none') {
+            this.buffer_context.fillText(set.text, set.x, set.y);
+        }
+        if (set.stroke !== undefined && set.stroke !== null && set.stroke !== 'none') {
+            this.buffer_context.strokeStyle = set.stroke;
+            this.buffer_context.lineWidth = set.line_width || 1;
+            this.buffer_context.strokeText(set.text, set.x, set.y);
+        }
+        this.buffer_context.restore();
+    }
+    this.text = [];
     this.main_context.drawImage(this.buffer_canvas, 0, 0);
 }
 //--- Sound ---------------------------------------------------------
@@ -470,11 +493,11 @@ cosmo.Button.prototype.pressed = function () {
 cosmo.Button.prototype.update = function () {
     if (cosmo.key[this.key] || this.pressed()) {
         this.active = true;
-        try { this.hold(); } catch(e) { }
+        try { this.hold(); } catch (e) { }
     } else {
         if (this.active) {
             this.active = false;
-            try { this.press(); } catch(e) { }
+            try { this.press(); } catch (e) { }
         }
     }
 }
@@ -587,21 +610,27 @@ cosmo.Scene.prototype.render = function () {
 //--- Main ----------------------------------------------------------
 function game_loop() {
     window.requestAnimationFrame(game_loop);
+    cosmo.scene.update();
+    cosmo.screen.update();
+    if (cosmo.loop) cosmo.loop();
+    cosmo.scene.render();
+    cosmo.screen.render();
+    /*
+    if (cosmo.scene) {
+        cosmo.scene.render();
+        cosmo.scene.update();
+    }
+    cosmo.screen.render();
+    cosmo.screen.update();
     if (cosmo.loop)
         cosmo.loop();
-    if (cosmo.scene) {
-        cosmo.scene.update();
-        cosmo.scene.render();
-    }
-    cosmo.screen.update();
-    cosmo.screen.render();
+        */
 }
 cosmo.play = function () {
     if (this.game) {
         this.game(this);
         if (this.start)
             this.start(this);
-        if (this.screen)
-            game_loop();
+        game_loop();
     }
 }

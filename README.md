@@ -2,8 +2,8 @@
 Engine para facilitar a criação de jogos 2d em JavaScript para WEB ou Frameworks multiplataformas, como Cordova ou Ionic.
 ## Tutorial:
 ### Introdução
-O Cosmo 2D ajuda a criar um canvas game 2D para navegadores e outros. Basta criar os objetos dentro do `window.onload()` no arquivo _game.js_.
-### Tela do jogo (`gameScreen`)
+O Cosmo 2D ajuda a criar um canvas game 2D para navegadores e outros. Para começar a cria seu jogo você primeiramente precisa criar o objeto _`cosmo.game = {...}`_.
+### Tela do jogo (`cosmo.screen`)
 O primeiro objeto que precisa ser criado é `gameScreen`, ele insere o canvas no HTML faz o controle da camera e são renderizados os senários e atores.
 #### Inicialização
 ```javascript
