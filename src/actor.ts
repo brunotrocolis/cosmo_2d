@@ -20,10 +20,6 @@ module cosmo {
         public unique: boolean;
         public persistent: boolean;
         public solid: boolean;
-        public start(): void { }
-        public loop(): void { }
-        public over(): void { }
-
         constructor(set: { [key: string]: any }) {
             var set: { [key: string]: any } = set || {};
             this.name = set.name || 'Actor';
@@ -37,7 +33,11 @@ module cosmo {
             this.start = set.start || function (): void { };
             this.loop = set.loop || function (): void { };
             this.over = set.over || function (): void { };
-
         }
+
+        public start(): void { }
+        public loop(): void { }
+        public over(): void { }
+
     }
 }

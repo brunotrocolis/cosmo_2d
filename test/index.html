@@ -7,7 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    
-    <script src="../build/main.js"></script>
+    <script src="../build/es5/main.js"></script>
+    <script src="../build/es5/screen.js"></script>
+    <script src="../build/es5/game.js"></script>
+    <script>
+        (function () {
+            var game = new cosmo.Game();
+            game.play();
+        })();
+    </script>
 </body>
 </html>
