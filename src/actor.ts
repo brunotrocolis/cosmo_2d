@@ -1,18 +1,6 @@
 module cosmo {
-    export interface IF_Actor {
-        name: string;
-        x: number;
-        y: number;
-        sprite: Sprite;
-        unique: boolean;
-        persistent: boolean;
-        solid: boolean;
+    export class Actor {
 
-        start(): void;
-        loop(): void;
-        over(): void;
-    }
-    export class Actor implements IF_Actor {
         public name: string;
         public x: number;
         public y: number;
@@ -20,6 +8,7 @@ module cosmo {
         public unique: boolean;
         public persistent: boolean;
         public solid: boolean;
+
         constructor(set: { [key: string]: any }) {
             var set: { [key: string]: any } = set || {};
             this.name = set.name || 'Actor';
@@ -38,6 +27,15 @@ module cosmo {
         public start(): void { }
         public loop(): void { }
         public over(): void { }
+
+        public update() {
+            this.loop();
+            this.sprite.update(this.x, this.y);
+        }
+
+        public render() {
+            this.sprite.render(this.x, this.y);
+        }
 
     }
 }

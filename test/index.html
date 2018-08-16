@@ -1,20 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
-    <script src="../build/es5/main.js"></script>
-    <script src="../build/es5/screen.js"></script>
+    <script src="../build/es5/actor.js"></script>
+    <script src="../build/es5/analog.js"></script>
+    <script src="../build/es5/block.js"></script>
+    <script src="../build/es5/button.js"></script>
     <script src="../build/es5/game.js"></script>
+    <script src="../build/es5/main.js"></script>
+    <script src="../build/es5/scene.js"></script>
+    <script src="../build/es5/screen.js"></script>
+    <script src="../build/es5/sound.js"></script>
+    <script src="../build/es5/sprite.js"></script>
+    <script src="../build/es5/tiles.js"></script>
+
     <script>
         (function () {
-            var game = new cosmo.Game();
+            var game = new cosmo.Game({
+                screen: new cosmo.Screen({
+                    auto_height: true
+                })
+            });
+
+            var hero = new cosmo.Actor({
+                name: "Herói",
+                x: 50, y: 50,
+                loop: function () {
+                    //console.log(cosmo.time.fps);
+                    //game.screen.buffer_context.drawImage(this.sprite.image, 0, 0);
+                }
+            });
+            hero.sprite = new cosmo.Sprite({
+                image: '../resources/sprites/down.png',
+                width: 60,
+                height: 27,
+                animation_frames: 4
+            });
+
+            game.scene = new cosmo.Scene({
+                actor: [
+                    hero
+                ]
+            });
+
             game.play();
         })();
     </script>
 </body>
+
 </html>

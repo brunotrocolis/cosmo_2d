@@ -13,11 +13,12 @@ module cosmo {
 
         constructor(set?: { [key: string]: any }) {
             var set: { [key: string]: any } = set || {};
-            this.image = new HTMLImageElement();
+            this.image = new Image(set.width, set.height);
             this.image.src = set.image || null;
             this.animation = {
                 frames: set.animation_frames || 1,
                 speed: set.animation_speed || 1,
+                current_frame: 0,
                 fix: set.animation_fix || false,
                 over_action: set.over_action || function () { }
             }
@@ -54,8 +55,8 @@ module cosmo {
         }
 
         update(x: number, y: number) {
-            this.collision.center.x = x + cosmo.scene.x + this.collision.rect.x + this.collision.half.width - this.origin.x;
-            this.collision.center.y = y + cosmo.scene.y + this.collision.rect.y + this.collision.half.height - this.origin.y;
+            this.collision.center.x = x + cosmo.game.scene.x + this.collision.rect.x + this.collision.half.width - this.origin.x;
+            this.collision.center.y = y + cosmo.game.scene.y + this.collision.rect.y + this.collision.half.height - this.origin.y;
         }
 
         render(x: number, y: number) {
@@ -73,11 +74,12 @@ module cosmo {
                     this.animation.current_frame = next_frame;
                 index = Math.floor(this.animation.current_frame);
             }
-            game.screen.buffer_context.save();
-            cosmo.screen.buffer_context.translate(x + cosmo.scene.x, y + cosmo.scene.y);
-            cosmo.screen.buffer_context.rotate(Math.PI / 180 * this.rotation);
-            cosmo.screen.buffer_context.globalAlpha = this.opacity;
-            cosmo.screen.buffer_context.drawImage(
+            var buffer =  cosmo.game.screen.buffer_context;
+            buffer.save();
+            buffer.translate(x + cosmo.game.scene.x, y + cosmo.game.scene.y);
+            buffer.rotate(Math.PI / 180 * this.rotation);
+            buffer.globalAlpha = this.opacity;
+            buffer.drawImage(
                 this.image,
                 index * this.size.width,
                 0,
@@ -88,7 +90,8 @@ module cosmo {
                 this.size.width * this.scale.x,
                 this.size.height * this.scale.y
             );
-            cosmo.screen.buffer_context.restore();
+            buffer.restore();
+            //console.log('1');
         }
     }
 }

@@ -1,11 +1,5 @@
 var cosmo;
 (function (cosmo) {
-    cosmo.time = {
-        fps: 60,
-        delta: 0,
-        last: 0
-    };
-    cosmo.key = [];
     cosmo.QQVGA = [160, 120];
     cosmo.HQVGA = [240, 160];
     cosmo.QVGA = [320, 240];
@@ -36,22 +30,26 @@ var cosmo;
     cosmo.WQXGA = [2560, 1600];
     cosmo.LANDSCAPE = false;
     cosmo.PORTRAIT = true;
-    cosmo.resource = function (id) {
-        return document.getElementById(id);
+    cosmo.time = {
+        fps: 60,
+        last: 0
     };
-    cosmo.res = cosmo.resource;
+    cosmo.key = [];
+    function fps() {
+        cosmo.time.fps = Math.round(1000 / (performance.now() - cosmo.time.last));
+        cosmo.game.screen.buffer_context.fillText("FPS: " + cosmo.time.fps, 10, 10);
+        cosmo.time.last = performance.now();
+    }
+    cosmo.fps = fps;
     function loop() {
         window.requestAnimationFrame(loop);
-        cosmo.game.loop();
-        cosmo.game.screen.render();
+        cosmo.game.update();
+        cosmo.game.render();
+        fps();
     }
     cosmo.loop = loop;
-    function start() {
-    }
-    cosmo.start = start;
     function play(game) {
         cosmo.game = game;
-        start();
         loop();
     }
     cosmo.play = play;

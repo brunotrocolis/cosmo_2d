@@ -17,6 +17,13 @@ var cosmo;
         Actor.prototype.start = function () { };
         Actor.prototype.loop = function () { };
         Actor.prototype.over = function () { };
+        Actor.prototype.update = function () {
+            this.loop();
+            this.sprite.update(this.x, this.y);
+        };
+        Actor.prototype.render = function () {
+            this.sprite.render(this.x, this.y);
+        };
         return Actor;
     }());
     cosmo.Actor = Actor;

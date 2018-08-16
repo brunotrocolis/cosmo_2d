@@ -1,13 +1,4 @@
 module cosmo {
-
-    export var game: Game; 
-    export var time: { [key: string]: number } = {
-        fps: 60,
-        delta: 0,
-        last: 0
-    };
-    export var key: Array<boolean> = [];
-
     export const QQVGA: Array<number> = [160, 120];
     export const HQVGA: Array<number> = [240, 160];
     export const QVGA: Array<number> = [320, 240];
@@ -39,23 +30,28 @@ module cosmo {
     export const LANDSCAPE: boolean = false;
     export const PORTRAIT: boolean = true;
 
-    export var resource = function (id: string): HTMLElement {
-        return document.getElementById(id);
+    export var game: Game; 
+    export var time: { [key: string]: number } = {
+        fps: 60,
+        last: 0
+    };
+    export var key: Array<boolean> = [];
+
+    export function fps(): void {
+        time.fps = Math.round(1000 / (performance.now() - time.last));
+        game.screen.buffer_context.fillText("FPS: "+time.fps, 10, 10);
+        time.last = performance.now();
     }
-    export var res = resource;
 
     export function loop(): void {
         window.requestAnimationFrame(loop);
-        cosmo.game.loop();
-
-        cosmo.game.screen.render();
+        cosmo.game.update();
+        cosmo.game.render();
+        fps();
     }
-    export function start(): void {
-
-    }
+    
     export function play(game): void {
         cosmo.game = game;
-        start();
         loop();
     }
 

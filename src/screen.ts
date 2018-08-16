@@ -7,11 +7,15 @@ module cosmo {
         public buffer_context: CanvasRenderingContext2D;
         public size: { [key: string]: any };
 
+
         constructor(set?: { [key: string]: any }) {
             var set: { [key: string]: any } = set || {};
             this.main_canvas = document.createElement('canvas');
+            this.main_canvas.setAttribute("style", "display: block; margin: auto; width: 100%; image-rendering: optimizeSpeed; image-rendering: pixelated; image-rendering: pixelated; -ms-interpolation-mode: nearest-neighbor;");
             this.buffer_canvas = document.createElement('canvas');
+
             var content = document.getElementById(set.content) || document.body;
+            content.setAttribute("style", "margin: 0; padding: 0; overflow: hidden;");
 
             this.size = {
                 device: {
@@ -37,19 +41,15 @@ module cosmo {
             this.main_context = this.main_canvas.getContext('2d');
             this.buffer_context = this.buffer_canvas.getContext('2d');
 
-            this.main_canvas.style.width = "100%";
+
 
             content.appendChild(this.main_canvas);
         }
-
-        update() {
-
-        }
-
         render() {
+            this.main_context.clearRect(0, 0, this.size.width, this.size.height);
             this.main_context.drawImage(this.buffer_canvas, 0, 0);
             this.buffer_context.clearRect(0, 0, this.size.width, this.size.height);
-            //console.log("render")
+            //console.log("2");
         }
     }
 }
