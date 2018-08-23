@@ -17,13 +17,24 @@ module cosmo {
             cosmo.play(this);
         }
 
-        update () {
+        update() {
             this.loop();
             this.scene.update();
+            // Test:
+            if (test.active) {
+                test.update();
+            }
+            //
+            this.screen.update();
         }
 
         render() {
             this.scene.render();
+            // Test:
+            if (test.active) {
+                test.render();
+            }
+            //
             this.screen.render();
         }
     }

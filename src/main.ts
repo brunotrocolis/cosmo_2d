@@ -29,8 +29,82 @@ module cosmo {
     export const WQXGA: Array<number> = [2560, 1600];
     export const LANDSCAPE: boolean = false;
     export const PORTRAIT: boolean = true;
+    // Teste:
+    export var test: { [key: string]: any } = {
+        active: false,
+        update: function () {
 
-    export var game: Game; 
+        },
+        render: function () {
+            // Mostrar FPS na tela:
+            game.screen.buffer_context.fillStyle = "#000000";
+            game.screen.buffer_context.fillText("FPS: " + time.fps, 10, 10);
+            // Mostrar limites da camera:
+            game.screen.buffer_context.strokeStyle = "#FFFF00";
+            game.screen.buffer_context.strokeRect(
+                game.screen.camera.left,
+                game.screen.camera.top,
+                game.screen.size.width - (game.screen.camera.left + game.screen.camera.right),
+                game.screen.size.height - (game.screen.camera.top + game.screen.camera.bottom)
+            );
+            // Mostrar parâmetros dos sprites:
+            game.scene.actor.forEach(actor => {
+                var s = actor.sprite;
+                var b = game.screen.buffer_context;
+                if (s !== undefined) {
+                    var x = actor.x + game.scene.x;
+                    var y = actor.y + game.scene.y;
+                    b.beginPath()
+                    b.moveTo(x - 3, y);
+                    b.lineTo(x + 3, y);
+                    b.moveTo(x, y - 3);
+                    b.lineTo(x, y + 3);
+                    b.strokeStyle = "#FF0000";
+                    b.stroke();
+                    b.closePath();
+                    b.strokeStyle = "#0000FF";
+                    b.strokeRect(
+                        x - s.origin.x,
+                        y - s.origin.y,
+                        s.size.width,
+                        s.size.height
+                    );
+                    if (actor.collision()) {
+                        b.strokeStyle = "#FF0000";
+                    } else {
+                        b.strokeStyle = "#00FF00";
+                    }
+                    b.strokeRect(
+                        (x - s.origin.x) + s.collision.rect.x,
+                        (y - s.origin.y) + s.collision.rect.y,
+                        s.collision.rect.width,
+                        s.collision.rect.height
+                    );
+                }
+            });
+            // Mostrar áreas bloqueadas:
+            game.screen.buffer_context.strokeStyle = "#FF0000";
+            game.screen.buffer_context.fillStyle = "rgba(255,0,0,0.3)";
+            game.scene.tiles[0].forEach(tiles => {
+                if (tiles.blockMap) {
+                    tiles.blockMap.forEach(block => {
+                        game.screen.buffer_context.strokeRect(block.x + game.scene.x, block.y + game.scene.y, block.size.width, block.size.height);
+                        game.screen.buffer_context.fillRect(block.x + game.scene.x, block.y + game.scene.y, block.size.width, block.size.height);
+                    });
+                }
+            });
+            game.scene.tiles[1].forEach(tiles => {
+                if (tiles.blockMap) {
+                    tiles.blockMap.forEach(block => {
+                        game.screen.buffer_context.strokeRect(block.x + game.scene.x, block.y + game.scene.y, block.size.width, block.size.height);
+                        game.screen.buffer_context.fillRect(block.x + game.scene.x, block.y + game.scene.y, block.size.width, block.size.height);
+                    });
+                }
+            });
+        }
+    };
+    //
+    export var game: Game;
     export var time: { [key: string]: number } = {
         fps: 60,
         last: 0
@@ -39,24 +113,24 @@ module cosmo {
 
     export function fps(): void {
         time.fps = Math.round(1000 / (performance.now() - time.last));
-        game.screen.buffer_context.fillText("FPS: "+time.fps, 10, 10);
         time.last = performance.now();
     }
 
-    export function loop(): void {
+    export function loop(last): void {
         window.requestAnimationFrame(loop);
         cosmo.game.update();
         cosmo.game.render();
         fps();
     }
-    
+
     export function play(game): void {
         cosmo.game = game;
-        loop();
+        loop(performance.now());
     }
 
     window.addEventListener('keydown', function (event) {
         key[event.keyCode] = true;
+        //console.log(event.keyCode);
     }, false);
 
     window.addEventListener("keyup", function (event) {

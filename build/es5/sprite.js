@@ -2,8 +2,9 @@ var cosmo;
 (function (cosmo) {
     var Sprite = /** @class */ (function () {
         function Sprite(set) {
-            var set = set || {};
-            this.image = new Image(set.width, set.height);
+            if (set === void 0) { set = {}; }
+            var _this = this;
+            this.image = new Image();
             this.image.src = set.image || null;
             this.animation = {
                 frames: set.animation_frames || 1,
@@ -12,35 +13,51 @@ var cosmo;
                 fix: set.animation_fix || false,
                 over_action: set.over_action || function () { }
             };
-            this.size = {
-                width: this.image.width / this.animation.frames,
-                height: this.image.height
-            };
             this.scale = {
                 x: set.scale_x || 1,
                 y: set.scale_y || 1
             };
             this.rotation = set.rotation || 0;
             this.opacity = set.opacity || 1;
+            this.size = {
+                width: 0,
+                height: 0
+            };
             this.origin = {
-                x: set.origin_x || Math.round(this.size.width / 2),
-                y: set.origin_y || Math.round(this.size.height / 2)
+                x: 0,
+                y: 0
             };
             this.collision = {
-                rect: {},
-                half: null,
+                rect: {
+                    x: set.collision_x || 0,
+                    y: set.collision_y || 0,
+                    width: 0,
+                    height: 0
+                },
+                half: {
+                    width: 0,
+                    height: 0
+                },
                 center: {
                     x: 0,
                     y: 0
                 }
             };
-            this.collision.rect.x = set.collision_x || 0;
-            this.collision.rect.y = set.collision_y || 0;
-            this.collision.rect.width = set.collision_width || this.size.width;
-            this.collision.rect.height = set.collision_height || this.size.height;
-            this.collision.half = {
-                width: this.collision.rect.width / 2,
-                height: this.collision.rect.height / 2
+            this.image.onload = function () {
+                _this.size = {
+                    width: _this.image.width / _this.animation.frames,
+                    height: _this.image.height
+                };
+                _this.origin = {
+                    x: set.origin_x || Math.round(_this.size.width / 2),
+                    y: set.origin_y || Math.round(_this.size.height / 2)
+                };
+                _this.collision.rect.width = set.collision_width || _this.size.width;
+                _this.collision.rect.height = set.collision_height || _this.size.height;
+                _this.collision.half = {
+                    width: _this.collision.rect.width / 2,
+                    height: _this.collision.rect.height / 2
+                };
             };
         }
         Sprite.prototype.update = function (x, y) {
@@ -71,7 +88,6 @@ var cosmo;
             buffer.globalAlpha = this.opacity;
             buffer.drawImage(this.image, index * this.size.width, 0, this.size.width, this.size.height, -this.origin.x, -this.origin.y, this.size.width * this.scale.x, this.size.height * this.scale.y);
             buffer.restore();
-            //console.log('1');
         };
         return Sprite;
     }());

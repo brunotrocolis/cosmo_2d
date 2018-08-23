@@ -14,9 +14,20 @@ var cosmo;
         Game.prototype.update = function () {
             this.loop();
             this.scene.update();
+            // Test:
+            if (cosmo.test.active) {
+                cosmo.test.update();
+            }
+            //
+            this.screen.update();
         };
         Game.prototype.render = function () {
             this.scene.render();
+            // Test:
+            if (cosmo.test.active) {
+                cosmo.test.render();
+            }
+            //
             this.screen.render();
         };
         return Game;

@@ -23,6 +23,8 @@
 
     <script>
         (function () {
+            cosmo.test.active = true;
+
             var game = new cosmo.Game({
                 screen: new cosmo.Screen({
                     auto_height: true
@@ -32,23 +34,71 @@
             var hero = new cosmo.Actor({
                 name: "Herói",
                 x: 50, y: 50,
+                unique: true,
+                start: function () {
+                    this.speed = 2;
+                },
                 loop: function () {
-                    //console.log(cosmo.time.fps);
-                    //game.screen.buffer_context.drawImage(this.sprite.image, 0, 0);
+                    if (cosmo.key[65]) {
+                        this.x -= this.speed;
+                    } else if (cosmo.key[68]) {
+                        this.x += this.speed;
+                    }
+                    if (cosmo.key[87]) {
+                        this.y -= this.speed;
+                    } else if (cosmo.key[83]) {
+                        this.y += this.speed;
+                    }
                 }
             });
             hero.sprite = new cosmo.Sprite({
                 image: '../resources/sprites/down.png',
-                width: 60,
-                height: 27,
+                collision_x: 2,
+                collision_y: 14,
+                collision_width: 11,
+                collision_height: 11,
                 animation_frames: 4
             });
 
-            game.scene = new cosmo.Scene({
-                actor: [
-                    hero
+            tiles = new cosmo.Tiles({
+                image: "../resources/tiles/tiles.png",
+                rows: 2,
+                columns: 3,
+                block: [
+                    [true, true, true],
+                    [true, true, false]
+                ],
+                matrix: [
+                    [0, 0, 0, 100],
+                    [0, 0, 15, 100],
+                    [2, 0, 30, 100],
+
+                    [0, 1, 0, 115],
+                    [0, 1, 15, 115],
+                    [0, 1, 30, 115],
+                    [0, 0, 45, 110],
+
+
+                    [0, 1, 0, 130],
+                    [0, 1, 15, 130],
+                    [0, 1, 30, 130]
                 ]
             });
+            //320, 240
+            game.scene = new cosmo.Scene({
+                width: 640,
+                height: 480,
+                actor: [
+                    hero
+                ],
+                tiles: [
+                    [tiles],
+                    []
+                ]
+            });
+
+
+            game.screen.camera.actor = hero;
 
             game.play();
         })();
