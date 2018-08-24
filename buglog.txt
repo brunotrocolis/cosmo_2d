@@ -1,1 +1,2 @@
 1 - Quando o sprite é criado de forma global, da erro na velocidade de animação quando o sprite é usado por mais de um ator.
+2 - game.screen 

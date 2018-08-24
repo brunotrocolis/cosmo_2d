@@ -2,12 +2,15 @@ var cosmo;
 (function (cosmo) {
     var Sound = /** @class */ (function () {
         function Sound(set) {
-            var set = set || {};
-            this.audio = set.audio || new HTMLAudioElement();
-            this.audio.volume = set.volume || 1;
-            this.audio.loop = set.loop === undefined ? false : set.loop;
-            this.play = this.audio.play;
-            this.pause = this.audio.pause;
+            if (set === void 0) { set = {}; }
+            var _this = this;
+            this.audio = new Audio(set.sound);
+            this.audio.onload = function () {
+                _this.audio.volume = set.volume || 1;
+                _this.audio.loop = set.loop === undefined ? false : set.loop;
+                _this.play = _this.audio.play;
+                _this.pause = _this.audio.pause;
+            };
         }
         Sound.prototype.play = function () { };
         Sound.prototype.pause = function () { };
@@ -15,7 +18,7 @@ var cosmo;
             this.audio.currentTime = 0;
             this.play();
         };
-        Sound.prototype.set_volume = function (volume) {
+        Sound.prototype.setVolume = function (volume) {
             this.audio.volume = volume;
             this.audio.load();
         };

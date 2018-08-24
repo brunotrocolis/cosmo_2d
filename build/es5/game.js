@@ -2,14 +2,20 @@ var cosmo;
 (function (cosmo) {
     var Game = /** @class */ (function () {
         function Game(set) {
+            if (set === void 0) { set = {}; }
             cosmo.game = this;
-            var set = set || {};
             this.screen = set.screen || new cosmo.Screen();
             this.scene = set.scene || new cosmo.Scene();
+            if (set.loop !== void 0) {
+                this.loop = set.loop;
+            }
         }
         Game.prototype.loop = function () { };
         Game.prototype.play = function () {
             cosmo.play(this);
+        };
+        Game.prototype.setScreen = function (screen) {
+            this.screen = screen;
         };
         Game.prototype.update = function () {
             this.loop();

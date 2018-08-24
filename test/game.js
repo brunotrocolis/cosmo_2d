@@ -1,11 +1,12 @@
 (function () {
     cosmo.test.active = true;
 
-    var game = new cosmo.Game({
-        screen: new cosmo.Screen({
-            auto_height: true
-        })
+    var screen = new cosmo.Screen({
+        auto_height: true
     });
+
+    var game = new cosmo.Game();
+    game.screen = screen;
 
     var hero = new cosmo.Actor({
         name: "Herói",

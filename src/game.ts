@@ -4,20 +4,24 @@ module cosmo {
         public screen: Screen;
         public scene: Scene;
 
-        constructor(set?: { [key: string]: any }) {
+        constructor(set: { [key: string]: any } = {}) {
             cosmo.game = this;
-            var set = set || {};
             this.screen = set.screen || new Screen();
             this.scene = set.scene || new Scene();
+            if (set.loop !== void 0) { this.loop = set.loop }
         }
 
-        loop(): void { }
+        public loop(): void { }
 
-        play(): void {
+        public play(): void {
             cosmo.play(this);
         }
 
-        update() {
+        public setScreen(screen: Screen): void {
+            this.screen = screen;
+        }
+
+        public update(): void {
             this.loop();
             this.scene.update();
             // Test:
@@ -28,7 +32,7 @@ module cosmo {
             this.screen.update();
         }
 
-        render() {
+        public render(): void {
             this.scene.render();
             // Test:
             if (test.active) {

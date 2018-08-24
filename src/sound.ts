@@ -1,28 +1,25 @@
 module cosmo {
-    export interface IF_Sound {
-        audio: HTMLAudioElement;
-        play(): void;
-        pause(): void;
-        replay(): void;
-        set_volume(volume: number): void;
-    }
-    export class Sound implements IF_Sound {
+    export class Sound {
         public audio: HTMLAudioElement;
-        constructor(set?: { [key: string]: any }) {
-            var set: { [key: string]: any } = set || {};
-            this.audio = set.audio || new HTMLAudioElement();
-            this.audio.volume = set.volume || 1;
-            this.audio.loop = set.loop === undefined ? false : set.loop;
-            this.play = this.audio.play;
-            this.pause = this.audio.pause;
+
+        constructor(set: { [key: string]: any } = {}) {
+            var _this = this;
+            this.audio = new Audio(set.sound);
+            this.audio.onload = function () {
+                _this.audio.volume = set.volume || 1;
+                _this.audio.loop = set.loop === undefined ? false : set.loop;
+                _this.play = _this.audio.play;
+                _this.pause = _this.audio.pause;
+            }
         }
-        play(): void { }
-        pause(): void { }
-        replay(): void { 
+
+        public play(): void { }
+        public pause(): void { }
+        public replay(): void {
             this.audio.currentTime = 0;
             this.play();
         }
-        set_volume(volume: number): void { 
+        public setVolume(volume: number): void {
             this.audio.volume = volume;
             this.audio.load();
         }
