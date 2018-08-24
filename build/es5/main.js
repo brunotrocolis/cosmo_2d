@@ -94,6 +94,7 @@ var cosmo;
         last: 0
     };
     cosmo.key = [];
+    cosmo.touch = [];
     function fps() {
         cosmo.time.fps = Math.round(1000 / (performance.now() - cosmo.time.last));
         cosmo.time.last = performance.now();
@@ -111,6 +112,7 @@ var cosmo;
         loop(performance.now());
     }
     cosmo.play = play;
+    //Teclado
     window.addEventListener('keydown', function (event) {
         cosmo.key[event.keyCode] = true;
         //console.log(event.keyCode);
@@ -118,4 +120,25 @@ var cosmo;
     window.addEventListener("keyup", function (event) {
         cosmo.key[event.keyCode] = false;
     }, false);
+    //Touch
+    function touch_action(event) {
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            cosmo.touch[i] = {
+                x: Math.round(event.changedTouches[i].clientX * (cosmo.game.screen.size.width / cosmo.game.screen.size.content.width)),
+                y: Math.round(event.changedTouches[i].clientY * (cosmo.game.screen.size.height / cosmo.game.screen.size.content.height)),
+                radius: {
+                    x: event.changedTouches[i].radiusX,
+                    y: event.changedTouches[i].radiusY
+                },
+                force: event.changedTouches[i].force,
+                rotation_angle: event.changedTouches[i].rotationAngle
+            };
+        }
+    }
+    document.addEventListener("touchstart", touch_action);
+    document.addEventListener("touchmove", touch_action);
+    document.addEventListener("touchend", function (event) {
+        touch_action(event);
+        cosmo.touch = [];
+    });
 })(cosmo || (cosmo = {}));

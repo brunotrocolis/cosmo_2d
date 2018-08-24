@@ -7,6 +7,7 @@ module cosmo {
         public buffer_context: CanvasRenderingContext2D;
         public size: { [key: string]: any };
         public camera: { [key: string]: any };
+        public button: Button[];
 
         constructor(set?: { [key: string]: any }) {
             var set: { [key: string]: any } = set || {};
@@ -58,6 +59,17 @@ module cosmo {
                 right: set.camera_right || left_right,
                 actor: set.camera_actor || undefined
             };
+            this.button = set.button === void 0 ? [] : set.button;
+        }
+
+        public add(element: any, set: {[key:string]:any} = {}) {
+            switch (Object.getPrototypeOf(element)) {
+                case cosmo.Button.prototype:
+                    this.button.push(element);
+                    element.x = set.x || element.x;
+                    element.y = set.y || element.y;
+                    break;
+            }
         }
 
         public update(): void {
@@ -73,10 +85,16 @@ module cosmo {
                     game.scene.y = -(this.camera.actor.y - (this.size.height - this.camera.bottom));
                 }
             }
+            this.button.forEach(button => {
+                button.update();
+            });
         }
 
         public render(): void {
             this.main_context.clearRect(0, 0, this.size.width, this.size.height);
+            this.button.forEach(button => {
+                button.render();
+            });
             this.main_context.drawImage(this.buffer_canvas, 0, 0);
             this.buffer_context.clearRect(0, 0, this.size.width, this.size.height);
         }

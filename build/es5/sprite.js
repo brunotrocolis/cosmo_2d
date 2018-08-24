@@ -74,8 +74,7 @@ var cosmo;
                 next_frame = this.animation.current_frame + this.animation.speed * (this.animation.frames / cosmo.time.fps);
                 if (next_frame >= this.animation.frames) {
                     this.animation.current_frame = 0;
-                    if (this.animation.endAction)
-                        this.animation.endAction();
+                    this.animation.over_action();
                 }
                 else
                     this.animation.current_frame = next_frame;

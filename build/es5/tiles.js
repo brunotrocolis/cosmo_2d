@@ -42,7 +42,6 @@ var cosmo;
         };
         Tiles.prototype.setBlockMap = function (matrix) {
             var _this_1 = this;
-            //Ler células:
             var cells = [];
             matrix.forEach(function (element) {
                 if (_this_1.tileBlock[element[0], element[1]]) {
@@ -55,7 +54,6 @@ var cosmo;
             cells.sort(function (a, b) {
                 return a.y - b.y;
             });
-            //Ler linhas:
             var rows = [];
             var temp = {};
             cells.forEach(function (cell) {
@@ -83,7 +81,6 @@ var cosmo;
                 }
             });
             rows.push(temp);
-            //Ler Colunas:
             rows.sort(function (a, b) {
                 return a.x2 - b.x2;
             });

@@ -51,7 +51,18 @@ var cosmo;
                 right: set.camera_right || left_right,
                 actor: set.camera_actor || undefined
             };
+            this.button = set.button === void 0 ? [] : set.button;
         }
+        Screen.prototype.add = function (element, set) {
+            if (set === void 0) { set = {}; }
+            switch (Object.getPrototypeOf(element)) {
+                case cosmo.Button.prototype:
+                    this.button.push(element);
+                    element.x = set.x || element.x;
+                    element.y = set.y || element.y;
+                    break;
+            }
+        };
         Screen.prototype.update = function () {
             if (this.camera.actor !== undefined) {
                 if (this.camera.actor.x < this.camera.left - cosmo.game.scene.x && cosmo.game.scene.x < 0) {
@@ -67,9 +78,15 @@ var cosmo;
                     cosmo.game.scene.y = -(this.camera.actor.y - (this.size.height - this.camera.bottom));
                 }
             }
+            this.button.forEach(function (button) {
+                button.update();
+            });
         };
         Screen.prototype.render = function () {
             this.main_context.clearRect(0, 0, this.size.width, this.size.height);
+            this.button.forEach(function (button) {
+                button.render();
+            });
             this.main_context.drawImage(this.buffer_canvas, 0, 0);
             this.buffer_context.clearRect(0, 0, this.size.width, this.size.height);
         };

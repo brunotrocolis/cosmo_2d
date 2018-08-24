@@ -109,7 +109,8 @@ module cosmo {
         fps: 60,
         last: 0
     };
-    export var key: Array<boolean> = [];
+    export var key: any[] = [];
+    export var touch: any[] = [];
 
     export function fps(): void {
         time.fps = Math.round(1000 / (performance.now() - time.last));
@@ -128,6 +129,7 @@ module cosmo {
         loop(performance.now());
     }
 
+    //Teclado
     window.addEventListener('keydown', function (event) {
         key[event.keyCode] = true;
         //console.log(event.keyCode);
@@ -136,4 +138,26 @@ module cosmo {
     window.addEventListener("keyup", function (event) {
         key[event.keyCode] = false;
     }, false);
+    //Touch
+    function touch_action(event) {
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            touch[i] = {
+                x: Math.round(event.changedTouches[i].clientX * (game.screen.size.width / game.screen.size.content.width)),
+                y: Math.round(event.changedTouches[i].clientY * (game.screen.size.height / game.screen.size.content.height)),
+                radius: {
+                    x: event.changedTouches[i].radiusX,
+                    y: event.changedTouches[i].radiusY
+                },
+                force: event.changedTouches[i].force,
+                rotation_angle: event.changedTouches[i].rotationAngle
+            };
+        }
+        
+    }
+    document.addEventListener("touchstart", touch_action);
+    document.addEventListener("touchmove", touch_action);
+    document.addEventListener("touchend", function (event) {
+        touch_action(event);
+        touch = [];
+    });
 }

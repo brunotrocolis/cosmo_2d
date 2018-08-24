@@ -20,7 +20,7 @@ module cosmo {
                 speed: set.animation_speed || 1,
                 current_frame: 0,
                 fix: set.animation_fix || false,
-                over_action: set.over_action || function () { }
+                over_action: set.over_action || function (): void { }
             }
             this.scale = {
                 x: set.scale_x || 1,
@@ -71,6 +71,7 @@ module cosmo {
             }
         }
 
+
         public update(x: number, y: number): void {
             this.collision.center.x = x + cosmo.game.scene.x + this.collision.rect.x + this.collision.half.width - this.origin.x;
             this.collision.center.y = y + cosmo.game.scene.y + this.collision.rect.y + this.collision.half.height - this.origin.y;
@@ -86,7 +87,7 @@ module cosmo {
                 next_frame = this.animation.current_frame + this.animation.speed * (this.animation.frames / cosmo.time.fps);
                 if (next_frame >= this.animation.frames) {
                     this.animation.current_frame = 0;
-                    if (this.animation.endAction) this.animation.endAction();
+                    this.animation.over_action();
                 } else
                     this.animation.current_frame = next_frame;
                 index = Math.floor(this.animation.current_frame);

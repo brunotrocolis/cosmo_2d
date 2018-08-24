@@ -59,7 +59,6 @@ module cosmo {
         }
 
         public setBlockMap(matrix: number[][]) {
-            //Ler células:
             var cells: { [key: string]: number }[] = [];
             matrix.forEach(element => {
                 if (this.tileBlock[element[0], element[1]]) {
@@ -72,10 +71,8 @@ module cosmo {
             cells.sort(function (a, b) {
                 return a.y - b.y;
             });
-            //Ler linhas:
             var rows: { [key: string]: number }[] = [];
             var temp: { [key: string]: number } = {};
-
             cells.forEach(cell => {
                 if (temp.x1 === undefined) {
                     temp = {
@@ -99,7 +96,6 @@ module cosmo {
                 }
             });
             rows.push(temp);
-            //Ler Colunas:
             rows.sort(function (a, b) {
                 return a.x2 - b.x2;
             });
@@ -121,7 +117,6 @@ module cosmo {
                 }
             });
             columns.push(temp);
-
             columns.forEach(block => {
                 this.blockMap.push(new Block({
                     x: block.x1,
