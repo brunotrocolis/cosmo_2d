@@ -2,6 +2,7 @@ var cosmo;
 (function (cosmo) {
     var Screen = /** @class */ (function () {
         function Screen(set) {
+            this.VERSION = '3.0.0';
             var set = set || {};
             this.main_canvas = document.createElement('canvas');
             var css = "display: block;" +

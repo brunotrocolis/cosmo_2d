@@ -1,6 +1,6 @@
 module cosmo {
     export class Sprite {
-
+        public VERSION: string = '3.0.0';
         public image: HTMLImageElement;
         public size: { [key: string]: number };
         public animation: { [key: string]: any };

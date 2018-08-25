@@ -1,4 +1,5 @@
 module cosmo {
+    export const VERSION: string = '3.0.1';
     export const QQVGA: Array<number> = [160, 120];
     export const HQVGA: Array<number> = [240, 160];
     export const QVGA: Array<number> = [320, 240];

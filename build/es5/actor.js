@@ -3,6 +3,7 @@ var cosmo;
     var Actor = /** @class */ (function () {
         function Actor(set) {
             if (set === void 0) { set = {}; }
+            this.VERSION = '3.0.0';
             this.name = set.name || 'Actor';
             this.x = set.x || 0;
             this.y = set.y || 0;

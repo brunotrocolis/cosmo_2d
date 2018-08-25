@@ -3,6 +3,7 @@ var cosmo;
     var Sprite = /** @class */ (function () {
         function Sprite(set) {
             if (set === void 0) { set = {}; }
+            this.VERSION = '3.0.0';
             var _this = this;
             this.image = new Image();
             this.image.src = set.image || null;

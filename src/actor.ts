@@ -1,6 +1,7 @@
 module cosmo {
     export class Actor {
 
+        public VERSION: string = '3.0.0';
         public name: string;
         public x: number;
         public y: number;

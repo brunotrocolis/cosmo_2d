@@ -3,6 +3,7 @@ var cosmo;
     var Block = /** @class */ (function () {
         function Block(set) {
             if (set === void 0) { set = {}; }
+            this.VERSION = '3.0.0';
             this.x = set.x || 0;
             this.y = set.y || 0;
             this.size = {

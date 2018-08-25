@@ -3,7 +3,7 @@ var cosmo;
     var Tiles = /** @class */ (function () {
         function Tiles(set) {
             if (set === void 0) { set = {}; }
-            this.VERSION = '3.0.3';
+            this.VERSION = '3.0.2';
             var _this = this;
             this.image = new Image();
             this.image.src = set.image;
@@ -44,49 +44,27 @@ var cosmo;
         Tiles.prototype.setBlockMap = function (matrix) {
             var _this_1 = this;
             var cells = [];
-            matrix.forEach(function (tiles) {
-                if (_this_1.tileBlock[tiles[1]][tiles[0]]) {
-                    cells.push({ x1: tiles[2], y1: tiles[3], x2: tiles[2] + _this_1.size.width, y2: tiles[3] + _this_1.size.height });
+            matrix.forEach(function (element) {
+                if (_this_1.tileBlock[element[1]][element[0]]) {
+                    cells.push({ x1: element[2], y1: element[3], x2: element[2] + _this_1.size.width, y2: element[3] + _this_1.size.height });
                 }
             });
-            cells.sort(function (cell_1, cell_2) {
-                return cell_1.y1 - cell_2.y1;
+            console.log(cells);
+            cells.sort(function (a, b) {
+                return a.x1 - b.x1;
             });
-            var t = [];
-            var t2 = [];
-            var l = null;
-            cells.forEach(function (cell) {
-                if (l === null) {
-                    l = cell.y1;
-                }
-                if (cell.y1 === l) {
-                    t2.push(cell);
-                }
-                else {
-                    t2.sort(function (a, b) {
-                        return a.x1 - b.x1;
-                    });
-                    t.push(t2);
-                    l = null;
-                    t2 = [];
-                    t2.push(cell);
-                }
+            cells.sort(function (a, b) {
+                return a.y1 - b.y1;
             });
-            t.push(t2);
-            cells = [];
-            t.forEach(function (row) {
-                row.forEach(function (cell) {
-                    cells.push(cell);
-                });
-            });
+            console.log(cells);
             var rows = [];
             var temp = {};
             cells.forEach(function (cell) {
-                if (temp.x1 === void 0) {
+                if (temp === {}) {
                     temp = cell;
                 }
                 else {
-                    if (temp.x2 === cell.x1 && temp.y1 === cell.y1) {
+                    if (temp.x2 === cell.x1 && temp.y1 === cell.x1) {
                         temp.x2 = cell.x2;
                     }
                     else {
@@ -96,48 +74,7 @@ var cosmo;
                 }
             });
             rows.push(temp);
-            rows.sort(function (row_1, row_2) {
-                return row_1.x1 - row_2.x1;
-            });
-            var t = [];
-            var t2 = [];
-            var l = null;
-            rows.forEach(function (row) {
-                if (l === null) {
-                    l = row.x1;
-                }
-                if (row.x1 === l) {
-                    t2.push(row);
-                }
-                else {
-                    t2.sort(function (a, b) {
-                        return a.y1 - b.y1;
-                    });
-                    t.push(t2);
-                    l = null;
-                    t2 = [];
-                    t2.push(row);
-                }
-            });
-            t.push(t2);
-            var columns = [];
-            var temp = {};
-            rows.forEach(function (row) {
-                if (temp.x1 === void 0) {
-                    temp = row;
-                }
-                else {
-                    if (temp.y2 === row.y1 && temp.x1 === row.x1 && temp.x2 === row.x2) {
-                        temp.y2 = row.y2;
-                    }
-                    else {
-                        columns.push(temp);
-                        temp = row;
-                    }
-                }
-            });
-            columns.push(temp);
-            columns.forEach(function (block) {
+            rows.forEach(function (block) {
                 _this_1.blockMap.push(new cosmo.Block({
                     x: block.x1,
                     y: block.y1,
@@ -145,6 +82,70 @@ var cosmo;
                     height: block.y2 - block.y1
                 }));
             });
+            // cells.sort(function (a, b) {
+            //     return a.x - b.x;
+            // });
+            // cells.sort(function (a, b) {
+            //     return a.y - b.y;
+            // });
+            // var rows: { [key: string]: number }[] = [];
+            // var temp: { [key: string]: number } = {};
+            // console.log(cells);
+            // cells.forEach(cell => {
+            //     if (temp.x1 === undefined) {
+            //         temp = {
+            //             x1: cell.x,
+            //             y1: cell.y,
+            //             x2: cell.x + this.size.width,
+            //             y2: cell.y + this.size.height
+            //         }
+            //     } else {
+            //         if (temp.x2 === cell.x && temp.y1 === cell.y) {
+            //             temp.x2 = cell.x + this.size.width;
+            //         } else {
+            //             rows.push(temp);
+            //             temp = {
+            //                 x1: cell.x,
+            //                 y1: cell.y,
+            //                 x2: cell.x + this.size.width,
+            //                 y2: cell.y + this.size.height
+            //             }
+            //         }
+            //     }
+            // });
+            // rows.push(temp);
+            // console.log(rows);
+            // rows.sort(function (a, b) {
+            //     return a.x2 - b.x2;
+            // });
+            // rows.sort(function (a, b) {
+            //     return a.x1 - b.x1;
+            // });
+            // var columns: { [key: string]: number }[] = [];
+            // temp = {};
+            // rows.forEach(row => {
+            //     if (temp.x1 === undefined) {
+            //         temp = row;
+            //     } else {
+            //         if (row.y1 === temp.y2 && row.x2 === temp.x2) {
+            //             temp.y2 = row.y2;
+            //         } else {
+            //             columns.push(temp);
+            //             temp = row;
+            //         }
+            //     }
+            // });
+            // //console.log(rows);
+            // columns.push(temp);
+            // columns.forEach(block => {
+            //     this.blockMap.push(new Block({
+            //         x: block.x1,
+            //         y: block.y1,
+            //         width: block.x2 - block.x1,
+            //         height: block.y2 - block.y1
+            //     }));
+            // });
+            //console.log(columns);
         };
         Tiles.prototype.update = function () {
             if (this.blockMap) {

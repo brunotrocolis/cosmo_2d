@@ -4,6 +4,7 @@ var cosmo;
         function Scene(set) {
             if (set === void 0) { set = {}; }
             var _this = this;
+            this.VERSION = '3.0.0';
             this.name = set.name || 'Map';
             this.x = set.x || 0;
             this.y = set.y || 0;

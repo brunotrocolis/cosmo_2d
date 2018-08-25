@@ -1,6 +1,6 @@
 module cosmo {
     export class Tiles {
-
+        public VERSION: string = '3.0.2';
         public image: HTMLImageElement;
         public size: { [key: string]: number };
         public tileBlock: boolean[][];
@@ -60,55 +60,85 @@ module cosmo {
 
         public setBlockMap(matrix: number[][]) {
             var cells: { [key: string]: number }[] = [];
-            matrix.forEach(element => {
-                if (this.tileBlock[element[0], element[1]]) {
-                    cells.push({ x: element[2], y: element[3] });
+            matrix.forEach(tiles => {
+                if (this.tileBlock[tiles[1]][tiles[0]]) {
+                    cells.push({ x1: tiles[2], y1: tiles[3], x2: tiles[2] + this.size.width, y2: tiles[3] + this.size.height });
                 }
             });
-            cells.sort(function (a, b) {
-                return a.x - b.x;
+            cells.sort((cell_1, cell_2) => {
+                return cell_1.y1 - cell_2.y1;
             });
-            cells.sort(function (a, b) {
-                return a.y - b.y;
+            var t = [];
+            var t2 = [];
+            var l = null;
+            cells.forEach(cell => {
+                if (l === null) {
+                    l = cell.y1;
+                }
+                if (cell.y1 === l) {
+                    t2.push(cell);
+                } else {
+                    t2.sort((a, b) => {
+                        return a.x1 - b.x1;
+                    });
+                    t.push(t2);
+                    l = null;
+                    t2 = [];
+                    t2.push(cell);
+                }
+            });
+            t.push(t2);
+            cells = [];
+            t.forEach(row => {
+                row.forEach(cell => {
+                    cells.push(cell);
+                });
             });
             var rows: { [key: string]: number }[] = [];
             var temp: { [key: string]: number } = {};
             cells.forEach(cell => {
-                if (temp.x1 === undefined) {
-                    temp = {
-                        x1: cell.x,
-                        y1: cell.y,
-                        x2: cell.x + this.size.width,
-                        y2: cell.y + this.size.height
-                    }
+                if (temp.x1 === void 0) {
+                    temp = cell;
                 } else {
-                    if (temp.x2 === cell.x && temp.y1 === cell.y) {
-                        temp.x2 = cell.x + this.size.width;
+                    if (temp.x2 === cell.x1 && temp.y1 === cell.y1) {
+                        temp.x2 = cell.x2;
                     } else {
                         rows.push(temp);
-                        temp = {
-                            x1: cell.x,
-                            y1: cell.y,
-                            x2: cell.x + this.size.width,
-                            y2: cell.y + this.size.height
-                        }
+                        temp = cell;
                     }
                 }
             });
             rows.push(temp);
-            rows.sort(function (a, b) {
-                return a.x2 - b.x2;
+            rows.sort((row_1, row_2) => {
+                return row_1.x1 - row_2.x1;
             });
-            rows.sort(function (a, b) {
-                return a.x1 - b.x1;
-            });
-            var columns: { [key: string]: number }[] = [];
-            temp = {};
+            var t = [];
+            var t2 = [];
+            var l = null;
             rows.forEach(row => {
-                if (temp.x1 === undefined) {
+                if (l === null) {
+                    l = row.x1;
+                }
+                if (row.x1 === l) {
+                    t2.push(row);
+                } else {
+                    t2.sort((a, b) => {
+                        return a.y1 - b.y1;
+                    });
+                    t.push(t2);
+                    l = null;
+                    t2 = [];
+                    t2.push(row);
+                }
+            });
+            t.push(t2);
+            var columns: { [key: string]: number }[] = [];
+            var temp: { [key: string]: number } = {};
+            rows.forEach(row => {
+                if (temp.x1 === void 0) {
                     temp = row;
                 } else {
-                    if (row.y1 === temp.y2 && row.x2 === temp.x2) {
+                    if (temp.y2 === row.y1 && temp.x1 === row.x1 && temp.x2 === row.x2) {
                         temp.y2 = row.y2;
                     } else {
                         columns.push(temp);

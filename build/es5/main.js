@@ -1,5 +1,6 @@
 var cosmo;
 (function (cosmo) {
+    cosmo.VERSION = '3.0.1';
     cosmo.QQVGA = [160, 120];
     cosmo.HQVGA = [240, 160];
     cosmo.QVGA = [320, 240];

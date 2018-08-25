@@ -1,6 +1,6 @@
 module cosmo {
     export class Scene {
-
+        public VERSION: string = '3.0.0';
         public name: string;
         public x: number;
         public y: number;

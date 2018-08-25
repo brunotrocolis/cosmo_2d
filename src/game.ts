@@ -1,6 +1,6 @@
 module cosmo {
     export class Game {
-
+        public VERSION: string = '3.0.0';
         public screen: Screen;
         public scene: Scene;
 

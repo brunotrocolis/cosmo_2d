@@ -1,5 +1,6 @@
 module cosmo {
     export class Button {
+        public VERSION: string = '3.0.0';
         public image: HTMLImageElement;
         public x: number;
         public y: number;

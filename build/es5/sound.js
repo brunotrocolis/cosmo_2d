@@ -3,6 +3,7 @@ var cosmo;
     var Sound = /** @class */ (function () {
         function Sound(set) {
             if (set === void 0) { set = {}; }
+            this.VERSION = '2.0.0';
             var _this = this;
             this.audio = new Audio(set.sound);
             this.audio.onload = function () {

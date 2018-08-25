@@ -1,5 +1,6 @@
 module cosmo {
     export class Block {
+        public VERSION: string = '3.0.0';
         public x: number;
         public y: number;
         public size: { [key: string]: number };

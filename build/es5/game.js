@@ -3,6 +3,7 @@ var cosmo;
     var Game = /** @class */ (function () {
         function Game(set) {
             if (set === void 0) { set = {}; }
+            this.VERSION = '3.0.0';
             cosmo.game = this;
             this.screen = set.screen || new cosmo.Screen();
             this.scene = set.scene || new cosmo.Scene();

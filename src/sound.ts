@@ -1,5 +1,6 @@
 module cosmo {
     export class Sound {
+        public VERSION: string = '2.0.0';
         public audio: HTMLAudioElement;
 
         constructor(set: { [key: string]: any } = {}) {

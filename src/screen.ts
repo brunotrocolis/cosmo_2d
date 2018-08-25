@@ -1,6 +1,6 @@
 module cosmo {
     export class Screen {
-
+        public VERSION: string = '3.0.0';
         public main_canvas: HTMLCanvasElement;
         public main_context: CanvasRenderingContext2D;
         public buffer_canvas: HTMLCanvasElement;
