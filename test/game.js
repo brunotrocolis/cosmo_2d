@@ -1,11 +1,13 @@
+var game = {};
+
 (function () {
-    cosmo.test.active = true;
+    cosmo.test.active = false;
 
     var screen = new cosmo.Screen({
         auto_height: true
     });
 
-    var game = new cosmo.Game();
+    game = new cosmo.Game();
     game.screen = screen;
 
     var hero = new cosmo.Actor({
@@ -14,29 +16,61 @@
         unique: true,
         start: function () {
             this.speed = 2;
+            this.custonSprites = {
+                up: new cosmo.Sprite({
+                    image: '../resources/sprites/up.png',
+                    collision_x: 2,
+                    collision_y: 14,
+                    collision_width: 11,
+                    collision_height: 11,
+                    animation_frames: 4
+                }),
+                down: new cosmo.Sprite({
+                    image: '../resources/sprites/down.png',
+                    collision_x: 2,
+                    collision_y: 14,
+                    collision_width: 11,
+                    collision_height: 11,
+                    animation_frames: 4
+                }),
+                left: new cosmo.Sprite({
+                    image: '../resources/sprites/left.png',
+                    collision_x: 2,
+                    collision_y: 14,
+                    collision_width: 11,
+                    collision_height: 11,
+                    animation_frames: 4
+                }),
+                right: new cosmo.Sprite({
+                    image: '../resources/sprites/right.png',
+                    collision_x: 2,
+                    collision_y: 14,
+                    collision_width: 11,
+                    collision_height: 11,
+                    animation_frames: 4
+                })
+            }
+
+            this.sprite = this.custonSprites.down;
         },
         loop: function () {
             if (cosmo.key[65]) {
+                this.sprite = this.custonSprites.left;
                 this.x -= this.speed;
             } else if (cosmo.key[68]) {
+                this.sprite = this.custonSprites.right;
                 this.x += this.speed;
             }
             if (cosmo.key[87]) {
+                this.sprite = this.custonSprites.up;
                 this.y -= this.speed;
             } else if (cosmo.key[83]) {
+                this.sprite = this.custonSprites.down;
                 this.y += this.speed;
             }
         }
     });
-    hero.sprite = new cosmo.Sprite({
-        image: '../resources/sprites/down.png',
-        collision_x: 2,
-        collision_y: 14,
-        collision_width: 11,
-        collision_height: 11,
-        animation_frames: 4
-    });
-
+    
     tiles = new cosmo.Tiles({
         image: "../resources/tiles/tiles.png",
         rows: 2,

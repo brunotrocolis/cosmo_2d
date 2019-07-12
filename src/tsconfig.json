@@ -1,8 +1,8 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
-        "outDir": "../build/es5"
+        "outDir": "../build/es6"
     }
 }

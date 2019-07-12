@@ -1,13 +1,6 @@
 var cosmo;
 (function (cosmo) {
-    cosmo.screen = new cosmo.Screen();
-    cosmo.scene = new cosmo.Scene;
-    cosmo.time = {
-        fps: 60,
-        delta: 0,
-        last: 0
-    };
-    cosmo.key = [];
+    cosmo.VERSION = '3.0.1';
     cosmo.QQVGA = [160, 120];
     cosmo.HQVGA = [240, 160];
     cosmo.QVGA = [320, 240];
@@ -36,28 +29,117 @@ var cosmo;
     cosmo.QXGA = [2048, 1536];
     cosmo.WQHD = [2560, 1440];
     cosmo.WQXGA = [2560, 1600];
-    cosmo.LANDSCAPE = true;
-    cosmo.PORTRAIT = false;
-    cosmo.resource = function (id) {
-        return document.getElementById(id);
+    cosmo.LANDSCAPE = false;
+    cosmo.PORTRAIT = true;
+    // Teste:
+    cosmo.test = {
+        active: false,
+        update: function () {
+        },
+        render: function () {
+            // Mostrar FPS na tela:
+            cosmo.game.screen.buffer_context.fillStyle = "#000000";
+            cosmo.game.screen.buffer_context.fillText("FPS: " + cosmo.time.fps, 10, 10);
+            // Mostrar limites da camera:
+            cosmo.game.screen.buffer_context.strokeStyle = "#FFFF00";
+            cosmo.game.screen.buffer_context.strokeRect(cosmo.game.screen.camera.left, cosmo.game.screen.camera.top, cosmo.game.screen.size.width - (cosmo.game.screen.camera.left + cosmo.game.screen.camera.right), cosmo.game.screen.size.height - (cosmo.game.screen.camera.top + cosmo.game.screen.camera.bottom));
+            // Mostrar parâmetros dos sprites:
+            cosmo.game.scene.actor.forEach(actor => {
+                var s = actor.sprite;
+                var b = cosmo.game.screen.buffer_context;
+                if (s !== undefined) {
+                    var x = actor.x + cosmo.game.scene.x;
+                    var y = actor.y + cosmo.game.scene.y;
+                    b.beginPath();
+                    b.moveTo(x - 3, y);
+                    b.lineTo(x + 3, y);
+                    b.moveTo(x, y - 3);
+                    b.lineTo(x, y + 3);
+                    b.strokeStyle = "#FF0000";
+                    b.stroke();
+                    b.closePath();
+                    b.strokeStyle = "#0000FF";
+                    b.strokeRect(x - s.origin.x, y - s.origin.y, s.size.width, s.size.height);
+                    if (actor.collision()) {
+                        b.strokeStyle = "#FF0000";
+                    }
+                    else {
+                        b.strokeStyle = "#00FF00";
+                    }
+                    b.strokeRect((x - s.origin.x) + s.collision.rect.x, (y - s.origin.y) + s.collision.rect.y, s.collision.rect.width, s.collision.rect.height);
+                }
+            });
+            // Mostrar áreas bloqueadas:
+            cosmo.game.screen.buffer_context.strokeStyle = "#FF0000";
+            cosmo.game.screen.buffer_context.fillStyle = "rgba(255,0,0,0.3)";
+            cosmo.game.scene.tiles[0].forEach(tiles => {
+                if (tiles.blockMap) {
+                    tiles.blockMap.forEach(block => {
+                        cosmo.game.screen.buffer_context.strokeRect(block.x + cosmo.game.scene.x, block.y + cosmo.game.scene.y, block.size.width, block.size.height);
+                        cosmo.game.screen.buffer_context.fillRect(block.x + cosmo.game.scene.x, block.y + cosmo.game.scene.y, block.size.width, block.size.height);
+                    });
+                }
+            });
+            cosmo.game.scene.tiles[1].forEach(tiles => {
+                if (tiles.blockMap) {
+                    tiles.blockMap.forEach(block => {
+                        cosmo.game.screen.buffer_context.strokeRect(block.x + cosmo.game.scene.x, block.y + cosmo.game.scene.y, block.size.width, block.size.height);
+                        cosmo.game.screen.buffer_context.fillRect(block.x + cosmo.game.scene.x, block.y + cosmo.game.scene.y, block.size.width, block.size.height);
+                    });
+                }
+            });
+        }
     };
-    cosmo.res = cosmo.resource;
-    function loop() {
+    cosmo.time = {
+        fps: 60,
+        last: 0
+    };
+    cosmo.key = [];
+    cosmo.touch = [];
+    function fps() {
+        cosmo.time.fps = Math.round(1000 / (performance.now() - cosmo.time.last));
+        cosmo.time.last = performance.now();
+    }
+    cosmo.fps = fps;
+    function loop(last) {
         window.requestAnimationFrame(loop);
+        cosmo.game.update();
+        cosmo.game.render();
+        fps();
     }
     cosmo.loop = loop;
-    function start() {
-    }
-    cosmo.start = start;
-    function play() {
-        start();
-        loop();
+    function play(game) {
+        cosmo.game = game;
+        loop(performance.now());
     }
     cosmo.play = play;
+    //Teclado
     window.addEventListener('keydown', function (event) {
         cosmo.key[event.keyCode] = true;
+        //console.log(event.keyCode);
     }, false);
     window.addEventListener("keyup", function (event) {
         cosmo.key[event.keyCode] = false;
     }, false);
+    //Touch
+    function touch_action(event) {
+        for (var i = 0; i < event.changedTouches.length; i++) {
+            cosmo.touch[i] = {
+                x: Math.round(event.changedTouches[i].clientX * (cosmo.game.screen.size.width / cosmo.game.screen.size.content.width)),
+                y: Math.round(event.changedTouches[i].clientY * (cosmo.game.screen.size.height / cosmo.game.screen.size.content.height)),
+                radius: {
+                    x: event.changedTouches[i].radiusX,
+                    y: event.changedTouches[i].radiusY
+                },
+                force: event.changedTouches[i].force,
+                rotation_angle: event.changedTouches[i].rotationAngle
+            };
+        }
+    }
+    document.addEventListener("touchstart", touch_action);
+    document.addEventListener("touchmove", touch_action);
+    document.addEventListener("touchend", function (event) {
+        touch_action(event);
+        cosmo.touch = [];
+    });
 })(cosmo || (cosmo = {}));
