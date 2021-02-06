@@ -1,0 +1,9 @@
+class GameElement {
+    update() {
+
+    }
+
+    render() {
+
+    }
+}

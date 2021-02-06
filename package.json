@@ -1,0 +1,22 @@
+{
+  "name": "cosmo_2d",
+  "version": "4.0.0",
+  "description": "Engine para canvas games 2D",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunotrocolis/cosmo_2d.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunotrocolis/cosmo_2d/issues"
+  },
+  "homepage": "https://github.com/brunotrocolis/cosmo_2d#readme"
+}
