@@ -1,64 +1,252 @@
 # Cosmo 2D
-Engine para facilitar a criação de jogos 2d em JavaScript para WEB ou Frameworks multiplataformas, como Cordova ou Ionic.
-## Tutorial:
-### Introdução
-O Cosmo 2D ajuda a criar um canvas game 2D para navegadores e outros. Para começar a cria seu jogo você primeiramente precisa criar o objeto _`cosmo.game = {...}`_.
-### Tela do jogo (`cosmo.screen`)
-O primeiro objeto que precisa ser criado é `gameScreen`, ele insere o canvas no HTML faz o controle da camera e são renderizados os senários e atores.
-#### Inicialização
-```javascript
-gameScreen = new GameScreen(resolution, orientation, autoHeight, content);
+
+Engine TypeScript para criação de jogos 2D em canvas para navegadores.
+
+## Requisitos
+
+- Node.js 18+
+
+## Instalação
+
+```bash
+npm install
 ```
-* **resolution** - Define o tamanho do canvas, o formato de entrada e um vetor com dois valores inteiros com a largura e altura da tela, o valor padrão é de [320, 240]. Dependendo dos valores setados em relação a tela do dispositivo pode haver deformidade da imagem. Pode ser usado as constantes:
-```javascript
-var QQVGA = [160, 120]
-var HQVGA = [240, 160]
-var QVGA = [320, 240]
-var WQVGA = [400, 240]
-var HVGA = [480, 320]
-var nHD = [640, 360]
-var VGA = [640, 480]
-var WVGA = [800, 480]
-var FWVGA = [854, 480]
-var qHD = [960, 540]
-var DVGA = [960, 640]
-var SVGA = [800, 600]
-var WSVGA = [1024, 600]
-var XGA = [1024, 768]
-var WXGA = [1280, 720]
-var HD = [1280, 720]
-var SXGA = [1280, 1024]
-var WXGA = [1366, 768]
-var SXGA_P = [1400, 1050]
-var WXGA_P = [1440, 900]
-var UXGA = [1600, 1200]
-var UXGA_PP = [1680, 1050]
-var WUXGA = [1920, 1200]
-var FHD = [1920, 1080]
-var FULL_HD = [1920, 1080]
-var QWXGA = [2048, 1152]
-var QXGA = [2048, 1536]
-var WQHD = [2560, 1440]
-var WQXGA = [2560, 1600]
+
+## Comandos
+
+```bash
+npm run dev      # Inicia o servidor de desenvolvimento (http://localhost:3000/test/index.html)
+npm run build    # Compila e gera dist/cosmo.js e dist/cosmo.esm.js
+npm run preview  # Serve o build final para testes
+npm run lint     # Verifica erros com ESLint
+npm run format   # Formata o código com Prettier
 ```
-* **orientation** - Define a orientação da tela, paisagem (`true`) ou retrato (`false`), o padrão é paisagem. Pode ser usado as constantes:
-```javascript
-LANDSCAPE = true
-PORTRAIT = false
+
+## Uso básico
+
+```typescript
+import * as cosmo from 'cosmo-2d';
+
+const game = new cosmo.Game({
+  screen: new cosmo.Screen({ resolution: cosmo.VGA }),
+});
+
+game.scene = new cosmo.Scene({
+  actor: [hero],
+  tiles: [[background], [foreground]],
+});
+
+game.play();
 ```
-* **autoHeight** - É usado para evitar deformação na imagem devido o tamanho da tela do dispositivo, quando este argumento é `true` a altura da `gameScreen` é recalculada com a mesma proporção da tela do dispositivo.
-* **content** - Recebe o id do content onde o canvas vai ser inserido no __HTML__, por padrão ele vem no `body`.
-#### Atributos
-As dimensões do `gameScreen` estão contidas no atributo `size`:
-```javascript
-gameScreen.size = {
-    width,              //Largura da tela
-    height,             //Altura da tela
-    deviceWidth,        //Largura do dispositivo
-    deviceHeight        //Altura do dispositivo
-}
+
+## Classes
+
+### `Game`
+
+Orquestrador do loop principal.
+
+```typescript
+const game = new cosmo.Game({
+  screen?: Screen,
+  scene?: Scene,
+  loop?: () => void,   // chamado a cada frame antes do update da cena
+});
+
+game.play();           // inicia o loop
+game.update();         // update manual (loop, scene, screen)
+game.render();         // render manual (scene, screen)
 ```
-Todos os gráficos são renderizados no atributo `bufferContext`:
-```javascript
-gameScreen.bufferContext.drawImage(...);
+
+---
+
+### `Screen`
+
+Configura o canvas e controla a câmera.
+
+```typescript
+const screen = new cosmo.Screen({
+  resolution?: [number, number],  // padrão: cosmo.QVGA [320, 240]
+  orientation?: boolean,          // padrão: detectado pelo dispositivo
+  auto_height?: boolean,          // recalcula altura para evitar deformação
+  content?: string,               // id do elemento HTML que receberá o canvas
+  camera_top?: number,
+  camera_bottom?: number,
+  camera_left?: number,
+  camera_right?: number,
+  camera_actor?: Actor,
+});
+
+screen.add(button);                // adiciona um Button à tela
+screen.camera.actor = hero;        // ativa o seguimento de câmera
+```
+
+**Constantes de resolução:**
+
+```typescript
+cosmo.QQVGA   // [160, 120]
+cosmo.QVGA    // [320, 240]
+cosmo.VGA     // [640, 480]
+cosmo.HD      // [1280, 720]
+cosmo.FHD     // [1920, 1080]
+// ...entre outras
+```
+
+---
+
+### `Scene`
+
+Contém os atores e os tilemaps.
+
+```typescript
+const scene = new cosmo.Scene({
+  width?: number,
+  height?: number,
+  actor?: Actor[],
+  tiles?: [Tiles[], Tiles[]],      // [layer 0 = fundo, layer 1 = frente]
+  background_color?: string,
+});
+
+scene.add(actor);                  // adiciona um ator
+scene.add(tiles, { layer: 1 });    // adiciona tiles na camada 1
+```
+
+---
+
+### `Actor`
+
+Entidade do jogo com posição, sprite e colisão.
+
+```typescript
+const hero = new cosmo.Actor({
+  name?: string,
+  x?: number,
+  y?: number,
+  sprite?: Sprite,
+  solid?: boolean,        // participa da colisão com blocos (padrão: true)
+  unique?: boolean,       // não clona o ator ao adicionar na cena
+  persistent?: boolean,   // sobrevive à troca de cena
+  start(this: Actor): void,    // chamado uma vez ao entrar na cena
+  loop(this: Actor): void,     // chamado a cada frame
+  over(this: Actor): void,     // chamado ao sair da cena
+});
+
+actor.collision();         // retorna o Actor colidindo, ou false
+actor.collision(other);    // retorna other se estiver colidindo, ou false
+actor.collision('Nome');   // retorna o Actor com aquele nome se colidindo
+actor.push(other);         // empurra `other` para fora da colisão
+actor.on_screen();         // true se o sprite estiver visível na tela
+```
+
+**Flags de bloqueio por tile** (limpas a cada frame):
+
+```typescript
+actor.block.up
+actor.block.down
+actor.block.left
+actor.block.right
+```
+
+---
+
+### `Sprite`
+
+Imagem com suporte a animação por spritesheet horizontal.
+
+```typescript
+const sprite = new cosmo.Sprite({
+  image?: string,
+  animation_frames?: number,   // número de frames no spritesheet
+  animation_speed?: number,    // velocidade da animação
+  animation_fix?: number,      // trava em um frame específico
+  over_action?: () => void,    // chamado ao completar um ciclo
+  scale_x?: number,
+  scale_y?: number,
+  rotation?: number,           // graus
+  opacity?: number,            // 0–1
+  origin_x?: number,           // ponto de origem (padrão: centro)
+  origin_y?: number,
+  collision_x?: number,        // offset da hitbox
+  collision_y?: number,
+  collision_width?: number,
+  collision_height?: number,
+});
+```
+
+> Cada `Actor` deve ter sua própria instância de `Sprite`. Compartilhar a mesma instância entre atores corrompe o estado da animação.
+
+---
+
+### `Tiles`
+
+Tilemap baseado em spritesheet com suporte a colisão.
+
+```typescript
+const tiles = new cosmo.Tiles({
+  image: string,
+  rows?: number,
+  columns?: number,
+  matrix?: [col, row, x, y][],   // lista de tiles: índice no sheet + posição no mapa
+  block?: boolean[][],            // define quais tiles são sólidos [row][col]
+});
+```
+
+---
+
+### `Button`
+
+Botão que responde a toque e teclado.
+
+```typescript
+const button = new cosmo.Button({
+  image?: string,     // spritesheet horizontal: frame 0 = normal, frame 1 = pressionado
+  x?: number,
+  y?: number,
+  scale_x?: number,
+  scale_y?: number,
+  key?: number,       // keyCode do teclado
+  press?: () => void, // chamado ao soltar
+  hold?: () => void,  // chamado enquanto pressionado
+});
+
+screen.add(button);
+```
+
+---
+
+### `Sound`
+
+Reprodução de áudio.
+
+```typescript
+const som = new cosmo.Sound({
+  sound: string,       // caminho do arquivo de áudio
+  volume?: number,     // 0–1
+  loop?: boolean,
+});
+
+som.play();
+som.pause();
+som.replay();          // reinicia do início
+som.setVolume(0.5);
+```
+
+---
+
+## Input
+
+```typescript
+cosmo.key[keyCode]   // boolean — true enquanto a tecla estiver pressionada
+cosmo.touch[]        // array de pontos de toque ativos
+```
+
+## Usando o build sem bundler
+
+Após `npm run build`, inclua no HTML:
+
+```html
+<script src="dist/cosmo.js"></script>
+<script>
+  var game = new cosmo.Game({ ... });
+  game.play();
+</script>
 ```

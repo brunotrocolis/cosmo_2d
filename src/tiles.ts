@@ -1,174 +1,150 @@
-module cosmo {
-    export class Tiles {
-        public VERSION: string = '3.0.2';
-        public image: HTMLImageElement;
-        public size: { [key: string]: number };
-        public tileBlock: boolean[][];
-        public tileMap: HTMLCanvasElement;
-        public blockMap: Block[];
+import { state } from './state';
+import { Block } from './block';
 
-        constructor(set: { [key: string]: any } = {}) {
-            var _this = this;
-            this.image = new Image();
-            this.image.src = set.image;
+export type TileMatrix = [number, number, number, number][];
+export type TileBlockDef = boolean[][];
 
-            this.image.onload = function () {
-                _this.size = {
-                    rows: set.rows || 1,
-                    columns: set.columns || 1,
-                    width: Math.round(_this.image.width / (set.columns || 1)),
-                    height: Math.round(_this.image.height / (set.rows || 1))
-                }
-                if (set.matrix !== undefined) {
-                    _this.setTileMap(set.matrix);
-                    if (set.block !== undefined) {
-                        _this.tileBlock = set.block;
-                        _this.blockMap = [];
-                        _this.setBlockMap(set.matrix);
-                    }
-                }
-            }
+export interface TilesOptions {
+  image: string;
+  rows?: number;
+  columns?: number;
+  matrix?: TileMatrix;
+  block?: TileBlockDef;
+}
+
+export class Tiles {
+  image: HTMLImageElement;
+  size!: { rows: number; columns: number; width: number; height: number };
+  tileMap!: HTMLCanvasElement;
+  blockMap?: Block[];
+  tileBlock?: TileBlockDef;
+
+  constructor(set: TilesOptions) {
+    this.image = new Image();
+    this.image.src = set.image;
+    this.image.onload = () => {
+      this.size = {
+        rows: set.rows ?? 1,
+        columns: set.columns ?? 1,
+        width: Math.round(this.image.width / (set.columns ?? 1)),
+        height: Math.round(this.image.height / (set.rows ?? 1)),
+      };
+      if (set.matrix) {
+        this.setTileMap(set.matrix);
+        if (set.block) {
+          this.tileBlock = set.block;
+          this.blockMap = [];
+          this.setBlockMap(set.matrix);
         }
+      }
+    };
+  }
 
-        public setTileMap(matrix: number[][]): void {
-            this.tileMap = document.createElement('canvas');
-            this.tileMap.width = 0;
-            this.tileMap.height = 0;
-            for (var i in matrix) {
-                if (matrix[i][2] >= this.tileMap.width) {
-                    this.tileMap.width = matrix[i][2] + this.size.width;
-                }
-                if (matrix[i][3] >= this.tileMap.height) {
-                    this.tileMap.height = matrix[i][3] + this.size.height;
-                }
-            }
-            var buffer_context = this.tileMap.getContext('2d');
-            for (var i in matrix) {
-                buffer_context.drawImage(
-                    this.image,
-                    matrix[i][0] * this.size.width,
-                    matrix[i][1] * this.size.height,
-                    this.size.width,
-                    this.size.height,
-                    matrix[i][2],
-                    matrix[i][3],
-                    this.size.width,
-                    this.size.height
-                );
-            }
-        }
-
-        public setBlockMap(matrix: number[][]) {
-            var cells: { [key: string]: number }[] = [];
-            matrix.forEach(tiles => {
-                if (this.tileBlock[tiles[1]][tiles[0]]) {
-                    cells.push({ x1: tiles[2], y1: tiles[3], x2: tiles[2] + this.size.width, y2: tiles[3] + this.size.height });
-                }
-            });
-            cells.sort((cell_1, cell_2) => {
-                return cell_1.y1 - cell_2.y1;
-            });
-            var t = [];
-            var t2 = [];
-            var l = null;
-            cells.forEach(cell => {
-                if (l === null) {
-                    l = cell.y1;
-                }
-                if (cell.y1 === l) {
-                    t2.push(cell);
-                } else {
-                    t2.sort((a, b) => {
-                        return a.x1 - b.x1;
-                    });
-                    t.push(t2);
-                    l = null;
-                    t2 = [];
-                    t2.push(cell);
-                }
-            });
-            t.push(t2);
-            cells = [];
-            t.forEach(row => {
-                row.forEach(cell => {
-                    cells.push(cell);
-                });
-            });
-            var rows: { [key: string]: number }[] = [];
-            var temp: { [key: string]: number } = {};
-            cells.forEach(cell => {
-                if (temp.x1 === void 0) {
-                    temp = cell;
-                } else {
-                    if (temp.x2 === cell.x1 && temp.y1 === cell.y1) {
-                        temp.x2 = cell.x2;
-                    } else {
-                        rows.push(temp);
-                        temp = cell;
-                    }
-                }
-            });
-            rows.push(temp);
-            rows.sort((row_1, row_2) => {
-                return row_1.x1 - row_2.x1;
-            });
-            var t = [];
-            var t2 = [];
-            var l = null;
-            rows.forEach(row => {
-                if (l === null) {
-                    l = row.x1;
-                }
-                if (row.x1 === l) {
-                    t2.push(row);
-                } else {
-                    t2.sort((a, b) => {
-                        return a.y1 - b.y1;
-                    });
-                    t.push(t2);
-                    l = null;
-                    t2 = [];
-                    t2.push(row);
-                }
-            });
-            t.push(t2);
-            var columns: { [key: string]: number }[] = [];
-            var temp: { [key: string]: number } = {};
-            rows.forEach(row => {
-                if (temp.x1 === void 0) {
-                    temp = row;
-                } else {
-                    if (temp.y2 === row.y1 && temp.x1 === row.x1 && temp.x2 === row.x2) {
-                        temp.y2 = row.y2;
-                    } else {
-                        columns.push(temp);
-                        temp = row;
-                    }
-                }
-            });
-            columns.push(temp);
-            columns.forEach(block => {
-                this.blockMap.push(new Block({
-                    x: block.x1,
-                    y: block.y1,
-                    width: block.x2 - block.x1,
-                    height: block.y2 - block.y1
-                }));
-            });
-        }
-
-        public update(): void {
-            if (this.blockMap) {
-                this.blockMap.forEach(block => {
-                    block.update();
-                });
-            }
-        }
-
-        public render(): void {
-            if (this.tileMap) {
-                game.screen.buffer_context.drawImage(this.tileMap, game.scene.x, game.scene.y);
-            }
-        }
+  setTileMap(matrix: TileMatrix): void {
+    this.tileMap = document.createElement('canvas');
+    this.tileMap.width = 0;
+    this.tileMap.height = 0;
+    for (const tile of matrix) {
+      if (tile[2] >= this.tileMap.width) this.tileMap.width = tile[2] + this.size.width;
+      if (tile[3] >= this.tileMap.height) this.tileMap.height = tile[3] + this.size.height;
     }
+    const ctx = this.tileMap.getContext('2d')!;
+    for (const tile of matrix) {
+      ctx.drawImage(
+        this.image,
+        tile[0] * this.size.width,
+        tile[1] * this.size.height,
+        this.size.width,
+        this.size.height,
+        tile[2],
+        tile[3],
+        this.size.width,
+        this.size.height
+      );
+    }
+  }
+
+  setBlockMap(matrix: TileMatrix): void {
+    if (!this.tileBlock || !this.blockMap) return;
+
+    let cells: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    for (const tile of matrix) {
+      if (this.tileBlock[tile[1]]?.[tile[0]]) {
+        cells.push({
+          x1: tile[2],
+          y1: tile[3],
+          x2: tile[2] + this.size.width,
+          y2: tile[3] + this.size.height,
+        });
+      }
+    }
+    cells.sort((a, b) => a.y1 - b.y1);
+
+    // Group by row, sort each row by x, flatten
+    const rowGroups: typeof cells[] = [];
+    let currentY: number | null = null;
+    let currentRow: typeof cells = [];
+    for (const cell of cells) {
+      if (currentY === null) currentY = cell.y1;
+      if (cell.y1 === currentY) {
+        currentRow.push(cell);
+      } else {
+        currentRow.sort((a, b) => a.x1 - b.x1);
+        rowGroups.push(currentRow);
+        currentY = cell.y1;
+        currentRow = [cell];
+      }
+    }
+    currentRow.sort((a, b) => a.x1 - b.x1);
+    rowGroups.push(currentRow);
+    cells = rowGroups.flat();
+
+    // Merge horizontally adjacent tiles in same row
+    const rows: typeof cells = [];
+    let temp = { ...cells[0] };
+    for (let i = 1; i < cells.length; i++) {
+      if (temp.x2 === cells[i].x1 && temp.y1 === cells[i].y1) {
+        temp.x2 = cells[i].x2;
+      } else {
+        rows.push(temp);
+        temp = { ...cells[i] };
+      }
+    }
+    rows.push(temp);
+
+    // Merge vertically adjacent rows with same x span
+    rows.sort((a, b) => a.x1 - b.x1);
+    const columns: typeof rows = [];
+    let temp2 = { ...rows[0] };
+    for (let i = 1; i < rows.length; i++) {
+      if (temp2.y2 === rows[i].y1 && temp2.x1 === rows[i].x1 && temp2.x2 === rows[i].x2) {
+        temp2.y2 = rows[i].y2;
+      } else {
+        columns.push(temp2);
+        temp2 = { ...rows[i] };
+      }
+    }
+    columns.push(temp2);
+
+    for (const block of columns) {
+      this.blockMap.push(
+        new Block({ x: block.x1, y: block.y1, width: block.x2 - block.x1, height: block.y2 - block.y1 })
+      );
+    }
+  }
+
+  update(): void {
+    this.blockMap?.forEach((block) => block.update());
+  }
+
+  render(): void {
+    if (this.tileMap) {
+      const scene = state.game.scene;
+      (state.game.screen.buffer_context as CanvasRenderingContext2D).drawImage(
+        this.tileMap,
+        scene.x,
+        scene.y
+      );
+    }
+  }
 }

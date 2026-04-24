@@ -1,45 +1,46 @@
-module cosmo {
-    export class Game {
-        public VERSION: string = '3.0.0';
-        public screen: Screen;
-        public scene: Scene;
+import { state } from './state';
+import { Screen } from './screen';
+import { Scene } from './scene';
 
-        constructor(set: { [key: string]: any } = {}) {
-            cosmo.game = this;
-            this.screen = set.screen || new Screen();
-            this.scene = set.scene || new Scene();
-            if (set.loop !== void 0) { this.loop = set.loop }
-        }
+export interface GameOptions {
+  screen?: Screen;
+  scene?: Scene;
+  loop?: () => void;
+}
 
-        public loop(): void { }
+export class Game {
+  screen: Screen;
+  scene: Scene;
 
-        public play(): void {
-            cosmo.play(this);
-        }
+  constructor(set: GameOptions = {}) {
+    state.game = this;
+    this.screen = set.screen ?? new Screen();
+    this.scene = set.scene ?? new Scene();
+    if (set.loop) this.loop = set.loop;
+  }
 
-        public setScreen(screen: Screen): void {
-            this.screen = screen;
-        }
+  loop(): void {}
 
-        public update(): void {
-            this.loop();
-            this.scene.update();
-            // Test:
-            if (test.active) {
-                test.update();
-            }
-            //
-            this.screen.update();
-        }
+  play(): void {
+    const tick = () => {
+      window.requestAnimationFrame(tick);
+      this.update();
+      this.render();
+      state.time.fps = Math.round(1000 / (performance.now() - state.time.last));
+      state.time.last = performance.now();
+    };
+    state.time.last = performance.now();
+    tick();
+  }
 
-        public render(): void {
-            this.scene.render();
-            // Test:
-            if (test.active) {
-                test.render();
-            }
-            //
-            this.screen.render();
-        }
-    }
+  update(): void {
+    this.loop();
+    this.scene.update();
+    this.screen.update();
+  }
+
+  render(): void {
+    this.scene.render();
+    this.screen.render();
+  }
 }
