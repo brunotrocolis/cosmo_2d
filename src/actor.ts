@@ -121,6 +121,10 @@ export class Actor {
   update(): void {
     this.loop();
     this.sprite?.update(this.x, this.y);
+    this.block.left = false;
+    this.block.up = false;
+    this.block.right = false;
+    this.block.down = false;
   }
 
   render(): void {

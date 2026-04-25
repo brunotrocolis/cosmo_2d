@@ -26,8 +26,9 @@ export class Game {
       window.requestAnimationFrame(tick);
       this.update();
       this.render();
-      state.time.fps = Math.round(1000 / (performance.now() - state.time.last));
-      state.time.last = performance.now();
+      const now = performance.now();
+      state.time.fps = Math.round(1000 / (now - state.time.last));
+      state.time.last = now;
     };
     state.time.last = performance.now();
     tick();

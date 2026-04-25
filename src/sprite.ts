@@ -108,21 +108,34 @@ export class Sprite {
 
     const scene = state.game.scene;
     const buffer = state.game.screen.buffer_context as CanvasRenderingContext2D;
-    buffer.save();
-    buffer.translate(x + scene.x, y + scene.y);
-    buffer.rotate((Math.PI / 180) * this.rotation);
-    buffer.globalAlpha = this.opacity;
-    buffer.drawImage(
-      this.image,
-      index * this.size.width,
-      0,
-      this.size.width,
-      this.size.height,
-      -this.origin.x,
-      -this.origin.y,
-      this.size.width * this.scale.x,
-      this.size.height * this.scale.y
-    );
-    buffer.restore();
+    const needsTransform = this.rotation !== 0 || this.scale.x !== 1 || this.scale.y !== 1;
+
+    if (needsTransform) {
+      buffer.save();
+      buffer.translate(x + scene.x, y + scene.y);
+      if (this.rotation !== 0) buffer.rotate((Math.PI / 180) * this.rotation);
+      buffer.globalAlpha = this.opacity;
+      buffer.drawImage(
+        this.image,
+        index * this.size.width, 0,
+        this.size.width, this.size.height,
+        -this.origin.x, -this.origin.y,
+        this.size.width * this.scale.x,
+        this.size.height * this.scale.y
+      );
+      buffer.restore();
+    } else {
+      if (this.opacity !== 1) buffer.globalAlpha = this.opacity;
+      buffer.drawImage(
+        this.image,
+        index * this.size.width, 0,
+        this.size.width, this.size.height,
+        x + scene.x - this.origin.x,
+        y + scene.y - this.origin.y,
+        this.size.width,
+        this.size.height
+      );
+      if (this.opacity !== 1) buffer.globalAlpha = 1;
+    }
   }
 }

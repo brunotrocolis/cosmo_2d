@@ -61,8 +61,8 @@ export class Scene {
   }
 
   render(): void {
-    this.tiles[0].forEach((t) => t.render());
-    this.actor.forEach((a) => a.render());
-    this.tiles[1].forEach((t) => t.render());
+    for (const t of this.tiles[0]) t.render();
+    for (const a of this.actor) { if (a.on_screen()) a.render(); }
+    for (const t of this.tiles[1]) t.render();
   }
 }
