@@ -5,7 +5,7 @@ export default defineConfig(({ command }) => {
   if (command === 'serve') {
     return {
       root: '.',
-      server: { port: 3000, open: '/test/index.html' },
+      server: { port: 3000, open: '/game/index.html' },
     };
   }
 

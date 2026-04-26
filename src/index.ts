@@ -37,7 +37,7 @@ export const WQHD: [number, number] = [2560, 1440];
 export const LANDSCAPE = false;
 export const PORTRAIT = true;
 
-export const VERSION = '3.0.1';
+export const VERSION = '0.2.0';
 
 // Re-export time, key, touch as convenience aliases to state
 export const time = state.time;

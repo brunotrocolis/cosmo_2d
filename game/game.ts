@@ -1,7 +1,24 @@
 import * as cosmo from '../src/index';
 
-const screen = new cosmo.Screen({ auto_height: true });
+const BASE_W = 160;
+const BASE_H = 120;
+
+const screen = new cosmo.Screen({
+  resolution: cosmo.QQVGA,
+  content: 'game-container',
+});
 const game = new cosmo.Game({ screen });
+
+const canvas = screen.main_canvas;
+const scaleSelect = document.getElementById('scale-select') as HTMLSelectElement;
+
+function applyScale(scale: number): void {
+  canvas.style.width = `${BASE_W * scale}px`;
+  canvas.style.height = `${BASE_H * scale}px`;
+}
+
+scaleSelect.addEventListener('change', () => applyScale(Number(scaleSelect.value)));
+applyScale(Number(scaleSelect.value));
 
 const hero = new cosmo.Actor({
   name: 'Herói',
